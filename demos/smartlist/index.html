@@ -68,9 +68,10 @@
   <!-- Let's use it! -->
    <script type="text/javascript">
       $(function() {
-		$('#summary').aloha();
 		$('#summary').keydown(function( event ) {
-			if ( event.simulated ) { return; }
+			if ( event.simulated ) {
+				event.stopImmediatePropagation();
+			}
 			var elem = GENTICS.Aloha.Selection.rangeObject.commonAncestorContainer;
 			event = $.Event( event );
 			if ( event.originalEvent ) {
@@ -82,6 +83,7 @@
 			event.simulated = true;
 			$( elem ).trigger( event );
 		});
+		$('#summary').aloha();
 		$('#summary').find('li').autocomplete({
 			source: function(request, response) {
 				var persons = $('[smart="true"]').sif().persons();
