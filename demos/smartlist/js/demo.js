@@ -4,7 +4,7 @@
 
 function presentEntitiesAsTags (rdfs, inputField) {
 			var foundEntities = [];
-			for (i in rdfs) {
+			for (var i in rdfs) {
 				var rdf = rdfs[i];
 				for (var e = 0; e < rdf.matches.length; e++) {
 					var entity = rdf[e];

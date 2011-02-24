@@ -89,9 +89,9 @@ SIF.Connectors.stanbol.places = function (rdf) {
 parseStanbolOutput = function (data) {
 		var rdf = jQuery.rdf();
 		
-		for (subj in data) {
+		for (var subj in data) {
 			var subject = subj.replace("\\/", "/");
-			for (pred in data[subj]) {
+			for (var pred in data[subj]) {
 				var predicate = pred.replace("\\/", "/");
 				if ($.isArray(data[subj][pred])) {
 					for (var i = 0; i < data[subject][pred].length; i++) {

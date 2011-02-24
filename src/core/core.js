@@ -102,7 +102,7 @@ SIF.prototype.registerSmartObject = function (obj) {
 SIF.prototype.getSmartObject = function (obj) {
 	obj = jQuery(obj);
 	//iterate over this.smartobjects
-	for (i in this.smartobjects) {
+	for (var i = 0; i < this.smartobjects; i++) {
 		var sObj = this.smartobjects[i];
 		if (sObj instanceof SIF.Smartobject && sObj.object.get(0) === obj.get(0)) {
 			return sObj;
