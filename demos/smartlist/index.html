@@ -29,9 +29,13 @@
 	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rdfa.min.js"></script>
 	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rules.min.js"></script>
 
-    <!-- AutoSuggest -->
-	<script type="text/javascript" src="../../lib/autosuggest/jquery.autoSuggest.js"></script>
-    <link rel="stylesheet" href="../../lib/autosuggest/autoSuggest.css" />
+    <!-- Autocomplete -->
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.menu.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.autocomplete.js"></script>
+    <link rel="stylesheet" href="../../lib/jquery-ui/css/jquery.ui.all.css" />
 
     <!-- SIF - Semantic Interaction Framework -->
     <script type="text/javascript" src="../../src/core/core.js"></script>
@@ -64,9 +68,25 @@
   <!-- Let's use it! -->
    <script type="text/javascript">
       $(function() {
-		//$('#summary').aloha();
-		 //semantify the object
-		 $('[smart="true"]').sif().analyze(); //triggers 'contextChanged'
+		$('#summary').aloha();
+		$('#summary').keydown(function( event ) {
+			if ( event.simulated ) { return; }
+			var elem = GENTICS.Aloha.Selection.rangeObject.commonAncestorContainer;
+			event = $.Event( event );
+			if ( event.originalEvent ) {
+				for ( var i = $.event.props.length, prop; i; ) {
+					prop = $.event.props[ --i ];
+					event[ prop ] = event.originalEvent[ prop ];
+				}
+			}
+			event.simulated = true;
+			$( elem ).trigger( event );
+		});
+		$('#summary').find('li').autocomplete({
+			source: [ "testing" ]
+		});
+		 //semantify the abstract object
+		 $('[smart="true"]').sif().analyze(); //triggers abs.'contextChanged'
       });
     </script>
 	
@@ -91,6 +111,9 @@
 		  Victoria Beckham, <span id="barack" typeof="v:Person" about="#barack-obama">
 		  <span property="v:name">Barack Obama</span></span> and 
 		  Michael Jackson were present at the event.</p>
+	      <ul>
+	        <li></li>
+	      </ul>
 		</div>
 		<hr/>
 		<hr/>
