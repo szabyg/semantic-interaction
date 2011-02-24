@@ -16,16 +16,14 @@
  *  limitations under the License.
  */
 
-if (!SIF.Utils) {
-	SIF.Utils = function () {};
-}
+SIF.Utils = function () {};
 
 
 /**
  * Generate a unique hexadecimal string with 4 charachters
  * @return {string} 
  */
-SIF.Utils.uniqeString4 = function () {
+SIF.Utils.prototype.uniqeString4 = function () {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 };
 
@@ -34,7 +32,7 @@ SIF.Utils.uniqeString4 = function () {
  * such as 21EC2020-3AEA-1069-A2DD-08002B30309D
  * @return {string} 
  */
-SIF.Utils.guid = function () {
+SIF.Utils.prototype.guid = function () {
 	var S4 = SIF.Utils.uniqeString4;
 	return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 };
@@ -43,7 +41,7 @@ SIF.Utils.guid = function () {
  * Calculates the distances (in kilometers) between
  * to positions.
  */
-SIF.Utils.distance = function (pos1, pos2) {
+SIF.Utils.prototype.distance = function (pos1, pos2) {
 	var R = 6371; // km
 	var d = Math.acos(
 			Math.sin(pos1.latitude) * 
