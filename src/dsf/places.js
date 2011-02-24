@@ -32,8 +32,8 @@
  */
 SIF.Smartobject.prototype.places = function () {
 	var ret = {};
-	for (c in SIF.ConnectorManager.connectors) {
-		var connector = SIF.ConnectorManager.connectors[c];
+	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
+		var connector = SIF.ConnectorManager.connectors[i];
 		var connectorId = connector.connectorId;
 		if (connector.places) {
 			var rdf = this.getContext().rdf[connectorId];

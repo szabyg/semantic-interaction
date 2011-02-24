@@ -27,13 +27,23 @@
  */
 
 /**
- * Retrieve all persons from a {@link SIF.Smartobject}
+ * Retrieve all persons from a {@link SIF.Smartobject}.
+ * A person has a firstname, lastname, email and
+ * affiliation.
+ * @example
+ * var person = 
+ * {
+ *   firstname : "Sebastian",
+ *   lastname  : "Germesin",
+ *   email     : "sebastian.germesin@dfki.de",
+ *   affiliation : jQuery.uri("<...>");
+ * }
  * @return {Object}
  */
 SIF.Smartobject.prototype.persons = function () {
 	var ret = {};
-	for (c in SIF.ConnectorManager.connectors) {
-		var connector = SIF.ConnectorManager.connectors[c];
+	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
+		var connector = SIF.ConnectorManager.connectors[i];
 		var connectorId = connector.connectorId;
 		if (connector.persons) {
 			var rdf = this.getContext().rdf[connectorId];

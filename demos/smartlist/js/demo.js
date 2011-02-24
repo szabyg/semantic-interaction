@@ -6,7 +6,7 @@ function presentEntitiesAsTags (rdfs, inputField) {
 			var foundEntities = [];
 			for (i in rdfs) {
 				var rdf = rdfs[i];
-				for (e in rdf.matches) {
+				for (var e = 0; e < rdf.matches.length; e++) {
 					var entity = rdf[e];
 					var name = entity.name;
 					var confidence = (entity.confidence) ? parseFloat((entity.confidence.toString()).replace(/"/g, "")) : 100.0;

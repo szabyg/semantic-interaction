@@ -82,3 +82,13 @@ SIF.Connector.prototype.analyze = function (obj, success, error) {};
  * @return void
  */
 SIF.Connector.prototype.query = function (obj, success, error) {};
+
+/**
+ * Serializes the annotation of the knowledge in the object.
+ * @param {Object} obj The object to be queried for.
+ * @param {jQuery.rdf} rdf The RDF data to be serialized.
+ * @param {Function} success The success callback. Retrieves the {@link jQuery} object.
+ * @param {Function} error The error callback. Retrieves {@link String}.
+ * @return void
+ */
+SIF.Connector.prototype.serialize = function (obj, rdf, success, error) {};

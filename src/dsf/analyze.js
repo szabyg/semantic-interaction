@@ -35,8 +35,8 @@ SIF.Smartobject.prototype.analyze = function (filter) {
 		//alert(message);
 	}
 	
-	for (c in SIF.ConnectorManager.connectors) {
-		var connector = SIF.ConnectorManager.connectors[c];
+	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
+		var connector = SIF.ConnectorManager.connectors[i];
 		if (filter) {
 			if ($.inArray(connector.connectorName, filter) != -1) {
 				connector.analyze(this.object, success, error);

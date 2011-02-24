@@ -124,7 +124,7 @@ parseStanbolOutput = function (data) {
 						}
 					}
 				} else {
-					alert("Parsing ERROR: Expected 'array', found: " + (typeof data[subj][pred]) + "!");
+				//	alert("Parsing ERROR: Expected 'array', found: " + (typeof data[subj][pred]) + "!");
 				}
 			}
 		}
