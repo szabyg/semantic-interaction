@@ -40,13 +40,13 @@ SIF.Smartobject.prototype.places = function () {
 	var copy = this.copy();
 	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
 		var connector = SIF.ConnectorManager.connectors[i];
-		var connectorId = connector.id;
+
 		if (connector.places) {
-			var rdf = copy.getContext().rdf[connectorId];
+			var rdf = copy.getContext().rdf[connector.id];
 			if (rdf) {
-				copy.matches[connectorId] = connector.places(rdf);
+				copy.matches[connector.id] = connector.places(rdf);
 			} else {
-				copy.matches[connectorId] = jQuery.rdf();
+				copy.matches[connector.id] = jQuery.rdf();
 			}
 		}
 	}

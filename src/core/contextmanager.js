@@ -48,11 +48,9 @@ SIF.ContextManager.prototype.contexts = [];
  * Initialize the {@link SIF.ContextManager}.
  * @return void.
  */
-SIF.ContextManager.prototype.init = function() {
-};
+SIF.ContextManager.prototype.init = function() {};
 
 SIF.ContextManager.prototype.register = function(context) {
-
 	if (context instanceof SIF.Context) {
 		this.contexts.push(context);
 	} else {

@@ -53,7 +53,7 @@ SIF.EventRegistry = function () {};
  * @return void.
  */
 SIF.EventRegistry.prototype.subscribe = function (eventSource, eventName, handleMethod) {
-	SIF.Log.log("debug", "SIF.EventRegistry", eventSource + " subscribed to the event '" + eventName + "'");
+	SIF.log("debug", "SIF.EventRegistry", eventSource + " subscribed to the event '" + eventName + "'");
 	jQuery(eventSource).bind(eventName, handleMethod);
 };
 
@@ -63,7 +63,7 @@ SIF.EventRegistry.prototype.subscribe = function (eventSource, eventName, handle
  * @return void.
  */
 SIF.EventRegistry.prototype.trigger = function (event) {
-	SIF.Log.log("debug", "SIF.EventRegistry", "triggering event '" + event.name + "' on object '" + event.source + "'");
+	SIF.log("debug", "SIF.EventRegistry", "triggering event '" + event.name + "' on object '" + event.source + "'");
 	jQuery(event.source).trigger(event.name, event.properties);
 };
 

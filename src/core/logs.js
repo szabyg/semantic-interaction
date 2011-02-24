@@ -211,7 +211,7 @@ SIF.Log.prototype.isDebugEnabled = function() {
  * @hide
  */
 SIF.Log.prototype.addToLogHistory = function(entry) {
-	
+
 	if (
 		// when maxEntries is set to something illegal, we do nothing (log history is disabled)
 		SIF.options.logHistory.maxEntries <= 0
