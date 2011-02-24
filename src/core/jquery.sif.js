@@ -17,65 +17,28 @@
  */
 
 /**
- * Convert jQuery object into a SIF.Smartobject, e.g., 
- * $(this).sif();
+ * Convert jQuery object into a SIF.Smartobject.
  *  @return {SIF.Smartobject}
  */
-jQuery.fn.sif = function() {
-	var sObj = SIF.getSmartObject(this);
-	if (sObj == undefined) {
-		sObj = SIF.registerSmartObject(jQuery(this));
+jQuery.fn.sif = function(method) {
+	var args = Array.prototype.slice.call(arguments, 1),
+		smartObject = SIF.getSmartObject(jQuery(this));
+	if ( arguments.length ) {
+		return smartObject[method].apply(smartObject, args);
 	}
-	return sObj;
+	return smartObject;
 };
 
 /**
- * Convert jQuery object into a SIF.Smartobject, e.g., 
- * $(this).SIF_sif();
+ * Convert jQuery object into a SIF.Smartobject.
  * Fallback in case of namespace collision
  * @return {SIF.Smartobject}
  */
 jQuery.fn.SIF_sif = function() {
-	var sObj = SIF.getSmartObject(this);
-	if (sObj == undefined) {
-		sObj = SIF.registerSmartObject(jQuery(this));
+	var args = Array.prototype.slice.call(arguments, 1),
+		smartObject = SIF.getSmartObject(jQuery(this));
+	if ( arguments.length ) {
+		return smartObject[method].apply(smartObject, args);
 	}
-	return sObj;
-};
-
-/**
- * Convert jQuery object into a SIF.Smartobject, e.g., 
- * $.sif(this);
- * @param {jQuery} obj The object to be registered
- * @return {SIF.Smartobject} or 'undefined'
- */
-jQuery.sif = function(obj) {
-	if (obj == undefined) {
-		return SIF;
-	} else {
-		var sObj = SIF.getSmartObject(obj);
-		if (sObj == undefined) {
-			sObj = SIF.registerSmartObject(jQuery(obj));
-		}
-		return sObj;
-	}
-};
-
-/**
- * Convert jQuery object into a SIF.Smartobject, e.g., 
- * $.SIF_sif(this);
- * Fallback in case of namespace collision
- * @param {jQuery} obj The object to be registered
- * @return {SIF.Smartobject} or 'undefined'
- */
-jQuery.SIF_sif = function(obj) {
-	if (obj == undefined) {
-		return SIF;
-	} else {
-		var sObj = SIF.getSmartObject(obj);
-		if (sObj == undefined) {
-			sObj = SIF.registerSmartObject(jQuery(obj));
-		}
-		return sObj;
-	}
+	return smartObject;
 };
