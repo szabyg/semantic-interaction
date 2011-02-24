@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:v="http://rdf.data-vocabulary.org/#" 
+	xmlns:iks="http://www.iks-project.eu/#"
+	xmlns:foaf="http://www.iks-project.eu/#"
+	xmlns:dc="http://purl.org/dc/terms/"
+	lang="en"> 
+  <head>
+    <title>[SiF] - SmartList Demo</title>
+
+	<!-- jQuery -->
+	<script type="text/javascript" src="../../lib/jquery/1.4/jquery-1.4.4.min.js"></script>
+	
+    <!-- aloha editor -->
+    <script>GENTICS_Aloha_base="../../lib/aloha/";</script> 
+    <script type="text/javascript" src="../../lib/aloha/aloha.js"></script>
+    <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Format/plugin.js"></script>
+    <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Table/plugin.js"></script>
+    <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.List/plugin.js"></script>
+    <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Link/plugin.js"></script>
+	
+	<!-- rdfQuery -->
+	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.core.min.js"></script>
+	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rdfa.min.js"></script>
+	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rules.min.js"></script>
+
+    <!-- AutoSuggest -->
+	<script type="text/javascript" src="../../lib/autosuggest/jquery.autoSuggest.js"></script>
+    <link rel="stylesheet" href="../../lib/autosuggest/autoSuggest.css" />
+
+    <!-- SIF - Semantic Interaction Framework -->
+    <script type="text/javascript" src="../../src/core/core.js"></script>
+    <script type="text/javascript" src="../../src/core/logs.js"></script>
+    <script type="text/javascript" src="../../src/core/events.js"></script>
+    <script type="text/javascript" src="../../src/core/jquery.sif.js"></script>
+    <script type="text/javascript" src="../../src/core/utils.js"></script>
+    <script type="text/javascript" src="../../src/core/smartobject.js"></script>
+    <script type="text/javascript" src="../../src/core/connector.js"></script>
+    <script type="text/javascript" src="../../src/core/connectormanager.js"></script>
+    <script type="text/javascript" src="../../src/core/context.js"></script>
+    <script type="text/javascript" src="../../src/core/contextmanager.js"></script>
+	<!--<script type="text/javascript" src="../../dist/min/jquery.sif-0.1.min.js"></script>-->
+	
+	<!-- SIF - connectors -->
+    <script type="text/javascript" src="../../src/connectors/stanbol.js"></script>
+    <script type="text/javascript" src="../../src/connectors/browser.js"></script>
+    <script type="text/javascript" src="../../src/connectors/rdfa.js"></script>
+    <script type="text/javascript" src="../../src/connectors/dbpedia.js"></script>
+    <script type="text/javascript" src="../../src/connectors/zemanta.js"></script>
+   
+	<!-- SIF - contexts -->
+    <script type="text/javascript" src="../../src/contexts/user.js"></script>
+    <script type="text/javascript" src="../../src/contexts/document.js"></script> 
+	
+	<!-- SIF - Domain specific Functionality -->
+    <script type="text/javascript" src="../../src/dsf/analyze.js"></script>
+    <script type="text/javascript" src="../../src/dsf/places.js"></script>
+    <script type="text/javascript" src="../../src/dsf/persons.js"></script>
+   
+   
+   <!-- SIF - Configurations -->
+   <script type="text/javascript">
+	SIF.Connectors.stanbol.options.stanbol_url = "http://stanbol.iksfordrupal.net:9000/engines/";
+   </script>
+  
+  <!-- Let's use it! -->
+   <script type="text/javascript">
+      $(function() {
+		 //semantify the abstract object
+		 var summary = $('#summary').sif().analyze(); //triggers abs.'contextChanged'
+      });
+    </script>
+	
+	<!-- Convenience methods -->
+	<script type="text/javascript" src="js/demo.js"></script>
+	
+    <!-- Demo-specific CSS -->
+    <link rel="stylesheet" href="css/demo.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <center>
+	<h1>[SiF] - Semantic Interaction Framework</h1>
+	<div class="introduction">
+	  This is a page to demonstrate the usage of the Semantic Interaction Framework.
+	</div>
+      </center>
+      <div id="editable">
+		<div id="summary">
+		  <h3>Abstract</h3>
+		  <p>The meeting took place in Vienna, Austria. Members from many countries and companies
+		  participated and joined the 'Hackathon'.</p>
+		</div>
+		<div id="participants" contenteditable="true">
+		  <h3>List of participants</h3>
+		  <ul>
+		    <li>Firstname Lastname - <a href="mailto:that.persons@email.com">that.persons@email.com</a></li>
+		    <li>...</li>
+		  </ul>
+		</div>
+		<div id="minutes">
+		  <h3>Minutes</h3>
+		  <i>Insert minutes here!</i>
+		</div>
+      </div>
+    </div>
+  </body>
+</html>
