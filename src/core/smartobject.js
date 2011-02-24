@@ -35,6 +35,18 @@ SIF.Smartobject = function (obj) {
 	SIF.EventRegistry.trigger(new SIF.Event("ready", this, null));
 }
 
+/**
+ * Needed for chaining.
+ */
+SIF.Smartobject.prototype.sif = function(method) {
+	var args = Array.prototype.slice.call(arguments, 1),
+		smartObject = SIF.getSmartObject(jQuery(this));
+	if ( arguments.length ) {
+		return smartObject[method].apply(smartObject, args);
+	}
+	return smartObject;
+};
+
 SIF.Smartobject.prototype.matches = {};
 
 SIF.Smartobject.prototype.copy = function () {

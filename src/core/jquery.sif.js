@@ -28,6 +28,7 @@
 
 /**
  * Convert jQuery object into a SIF.Smartobject.
+ * @optional {String} method Calls the domain-specific functionality.
  *  @return {SIF.Smartobject}
  */
 jQuery.fn.sif = function(method) {
@@ -41,6 +42,7 @@ jQuery.fn.sif = function(method) {
 
 /**
  * Convert jQuery object into a SIF.Smartobject.
+ * @optional {String} method Calls the domain-specific functionality.
  * Fallback in case of namespace collision
  * @return {SIF.Smartobject}
  */
