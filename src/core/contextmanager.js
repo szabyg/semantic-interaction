@@ -54,7 +54,7 @@ SIF.ContextManager.prototype.init = function() {
 SIF.ContextManager.prototype.register = function(context) {
 
 	if (context instanceof SIF.Context) {
-		this.contexts.push(context); 	
+		this.contexts.push(context);
 	} else {
 		alert("Trying to register a context which is not an instance of SIF.Context.");
 	}

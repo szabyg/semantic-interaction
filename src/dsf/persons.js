@@ -44,7 +44,7 @@ SIF.Smartobject.prototype.persons = function () {
 	var ret = {};
 	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
 		var connector = SIF.ConnectorManager.connectors[i];
-		var connectorId = connector.connectorId;
+		var connectorId = connector.id;
 		if (connector.persons) {
 			var rdf = this.getContext().rdf[connectorId];
 			if (rdf) {

@@ -27,20 +27,4 @@ SIF.Contexts.user.options = {};
 
 SIF.Contexts.user.rdf = jQuery.rdf();
 
-SIF.Contexts.user.init = function () {
-	//retrieve name of user
-	var name = "Firstname Lastname";//DEBUG: faked
-	SIF.Contexts.user.rdf
-	.prefix('dbprop', 'http://dbpedia.org/property/')
-	.add('<currentUser> dbprop:label "' + name + '"');
-
-	//get current location
-	SIF.Connectors.browser.analyze(navigator, function (data) {
-		var triples = data.databank.triples();
-		triples.each(function (i, e) {
-			SIF.Contexts.user.rdf.add(e);
-		});
-	});
-	
-	SIF.EventRegistry.trigger(new SIF.Event("ready", this, null));
-}
+SIF.Contexts.user.

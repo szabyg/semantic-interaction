@@ -17,15 +17,18 @@
  */
 
 SIF.Smartobject = function (obj) {
-	
-	if (obj.attr('id') == undefined) {
-		obj.attr('id', SIF.Utils.guid());
+
+	if (obj == undefined) {
+		// special type of object (e.g., user, document, ...)
+		this.id = SIF.Utils.guid();
+	} 
+	else {
+		if (obj.attr('id') == undefined) {
+			obj.attr('id', SIF.Utils.guid());
+		}
+		this.id = obj.attr('id');
+		this.object = obj;
 	}
-	
-	this.id = obj.attr('id');
-	
-	this.object = obj;
-	
 	this.context = new SIF.Context("object." + this.id, this);
 	
 	SIF.EventRegistry.trigger(new SIF.Event("ready", this, null));

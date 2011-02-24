@@ -51,7 +51,7 @@ jQuery.fn.SIF_sif = function() {
  */
 jQuery.sif = function(obj) {
 	if (obj == undefined) {
-		return undefined;
+		return SIF;
 	} else {
 		var sObj = SIF.getSmartObject(obj);
 		if (sObj == undefined) {
@@ -70,7 +70,7 @@ jQuery.sif = function(obj) {
  */
 jQuery.SIF_sif = function(obj) {
 	if (obj == undefined) {
-		return undefined;
+		return SIF;
 	} else {
 		var sObj = SIF.getSmartObject(obj);
 		if (sObj == undefined) {

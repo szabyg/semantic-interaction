@@ -67,6 +67,10 @@ SIF.prototype.init = function () {
 	// initialize the Log
 	this.Log.init();
 	
+	//set up special objects
+	this.user = initUser ();
+	this.document = initDocument();
+	
 	SIF.EventRegistry.trigger(new SIF.Event("ready", SIF, null));
 }
 
@@ -154,3 +158,25 @@ jQuery(document).ready(function () {
     	SIF.init();
     }
 });
+
+initUser = function () {
+	var user = new SIF.Smartobject();
+
+	//get current location
+	if (SIF.Connectors.browser) {
+		SIF.Connectors.browser.analyze(navigator, function (data) {
+			var triples = data.databank.triples();
+			user.getContext().update(data, SIF.Connectors.browser)
+		});
+	}
+	
+	SIF.EventRegistry.trigger(new SIF.Event("ready", user, null));
+	return user;
+}
+
+initDocument = function () {
+	var document = new SIF.Smartobject();
+	
+	SIF.EventRegistry.trigger(new SIF.Event("ready", document, null));
+	return document;
+}

@@ -27,7 +27,7 @@
 SIF.Smartobject.prototype.analyze = function (filter) {
 	var that = this;
 	var success = function (newRdf, connector) {
-		that.getContext().update(connector.connectorId, newRdf);
+		that.getContext().update(newRdf, connector);
 	};
 	
 	var error = function (message) {
