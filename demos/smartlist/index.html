@@ -29,9 +29,13 @@
 	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rdfa.min.js"></script>
 	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.rules.min.js"></script>
 
-    <!-- AutoSuggest -->
-	<script type="text/javascript" src="../../lib/autosuggest/jquery.autoSuggest.js"></script>
-    <link rel="stylesheet" href="../../lib/autosuggest/autoSuggest.css" />
+    <!-- Autocomplete -->
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.menu.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-ui/js/jquery.ui.autocomplete.js"></script>
+    <link rel="stylesheet" href="../../lib/jquery-ui/css/jquery.ui.all.css" />
 
     <!-- SIF - Semantic Interaction Framework -->
     <script type="text/javascript" src="../../src/core/core.js"></script>
@@ -69,9 +73,38 @@
   <!-- Let's use it! -->
    <script type="text/javascript">
       $(function() {
-		//$('#summary').aloha();
+		$('#summary').keydown(function( event ) {
+			if ( event.simulated ) {
+				event.stopImmediatePropagation();
+			}
+			var elem = GENTICS.Aloha.Selection.rangeObject.commonAncestorContainer;
+			event = $.Event( event );
+			if ( event.originalEvent ) {
+				for ( var i = $.event.props.length, prop; i; ) {
+					prop = $.event.props[ --i ];
+					event[ prop ] = event.originalEvent[ prop ];
+				}
+			}
+			event.simulated = true;
+			$( elem ).trigger( event );
+		});
+		$('#summary').aloha();
+		$('#summary').find('li').autocomplete({
+			source: function(request, response) {
+				var persons = $('[smart="true"]').sif().persons(),
+					names = [];
+				// loop through connectors
+				$.each( persons, function() {
+					// loop through people
+					$.each( this, function() {
+						names.push( this.name.toString().replace( /^"([^"]+)".+/, "$1" ) );
+					});
+				});
+				response( $.ui.autocomplete.filter( names, request.term ) );
+			}
+		});
 		 //semantify the abstract object
-		 $('#summary').sif().analyze(); //triggers abs.'contextChanged'
+		 $('[smart="true"]').sif().analyze(); //triggers abs.'contextChanged'
       });
     </script>
 	
@@ -96,12 +129,9 @@
 		  Victoria Beckham, <span id="barack" typeof="v:Person" about="#barack-obama">
 		  <span property="v:name">Barack Obama</span></span> and 
 		  Michael Jackson were present at the event.</p>
-		  <p>The next event will take place in 
-		  <span typeof="v:Address">
-		      <span property="v:street-address" >123 Main St</span>, 
-			  <span property="v:locality">Albuquerque</span>, 
-			  <span property="v:region">NM</span>.
-	      </span></p>
+	      <ul>
+	        <li></li>
+	      </ul>
 		</div>
 		<hr/>
 		<hr/>
@@ -114,7 +144,7 @@
 				</div></td>
 				<td style="width:300px;vertical-align:top;"><div id="persons">
 				  <h3>Tags - Persons</h3>
-				  <button onclick="presentEntitiesAsTags($('#summary').sif().persons(), $('#persons input'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
+				  <button onclick="presentEntitiesAsTags($('#test').sif().persons(), $('#persons input'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
 				  <div class="info"></div>
 				  <input style="display:block;" type="text"></input>
 				</div></td>
@@ -162,5 +192,69 @@ $(function() {
 		</span>
       </div>
     </div>
+	<div style="display:none;" smart="true" id="faked_data">
+			<span typeof="v:Organization" about="#dfki">
+				<span property="v:name">DFKI GmbH</span>
+				<span property="v:url">http://www.dfki.de</span>
+			</span>
+			<span typeof="v:Organization" about="#gentics">
+				<span property="v:name">GENTICS</span>
+				<span property="v:url">http://www.gentics.com</span>
+			</span>
+			<span typeof="v:Organization" about="#jqueryui">
+				<span property="v:name">jQUery UI</span>
+				<span property="v:url">http://www.jqueryui.com</span>
+			</span>
+			<span typeof="v:Person" about="#sebastian-germesin">
+				<span property="v:name">Sebastian Germesin</span>
+				<span property="v:firstname">Sebastian</span>
+				<span property="v:lastname">Germesin</span>
+				<span property="v:mbox">sebastian.germesin@dfki.de</span>
+				<span rel="v:affiliation">
+					<span typeof="v:Organization" about="#dfki"></span>
+				</span>
+				<span property="v:role" content="Researcher"></span>
+			</span>
+			<span typeof="v:Person" about="#massimo-romanelli">
+				<span property="v:name">Massimo Romanelli</span>
+				<span property="v:firstname">Massimo</span>
+				<span property="v:lastname">Romanelli</span>
+				<span property="v:mbox">romanell@dfki.de</span>
+				<span rel="v:affiliation">
+					<span typeof="v:Organization" about="#dfki"></span>
+				</span>
+				<span property="v:role" content="Researcher"></span>
+			</span>
+			<span typeof="v:Person" about="#tilman-becker">
+				<span property="v:name">Tilman Becker</span>
+				<span property="v:firstname">Tilman</span>
+				<span property="v:lastname">Becker</span>
+				<span property="v:mbox">becker@dfki.de</span>
+				<span rel="v:affiliation">
+					<span typeof="v:Organization" about="#gentics"></span>
+				</span>
+				<span property="v:role" content="Senior Researcher"></span>
+			</span>
+			<span typeof="v:Person" about="#haymo-meran">
+				<span property="v:name">Haymo Meran</span>
+				<span property="v:firstname">Haymo</span>
+				<span property="v:lastname">Meran</span>
+				<span property="v:mbox">h.meran@gentics.com</span>
+				<span rel="v:affiliation">
+					<span typeof="v:Organization" about="#gentics"></span>
+				</span>
+				<span property="v:role" content="???"></span>
+			</span>
+			<span typeof="v:Person" about="#scottgonzalez">
+				<span property="v:name">Scott Gonzalez</span>
+				<span property="v:firstname">Scott</span>
+				<span property="v:lastname">Gonzalez</span>
+				<span property="v:mbox">scottgonzalez@gmail.com</span>
+				<span rel="v:affiliation">
+					<span typeof="v:Organization" about="#jqueryui"></span>
+				</span>
+				<span property="v:role" content="???"></span>
+			</span>
+		</div>
   </body>
 </html>

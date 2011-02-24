@@ -31,8 +31,10 @@ SIF.Connectors.rdfa.init = function () {
 
 SIF.Connectors.rdfa.analyze = function (obj, success, error) {
 	if (jQuery.type(obj) === 'object') {
-		var rdfa = obj.rdfa();
-		success(rdfa, this);
+		for (var i = 0; i < obj.length; i++) {
+			var rdfa = $(obj[i]).rdfa();
+			success(rdfa, this);
+		}
 	}
 	else {
 		error("Can only handle jQuery objects!");
@@ -42,7 +44,22 @@ SIF.Connectors.rdfa.analyze = function (obj, success, error) {
 SIF.Connectors.rdfa.persons = function (rdf) {	
 	var ret = rdf
 	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
-	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name');
+	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
+	.optional('?subject <http://rdf.data-vocabulary.org/#firstname> ?firstname')
+	.optional('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
+	.optional('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
+	.optional('?subject <http://rdf.data-vocabulary.org/#mbox> ?mbox');
+		
+	return ret;
+}
+
+SIF.Connectors.rdfa.companies = function (rdf) {	
+	var ret = rdf
+	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
+	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
+	.optional('?subject <http://rdf.data-vocabulary.org/#firstname> ?firstname')
+	.optional('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
+	.optional('?subject <http://rdf.data-vocabulary.org/#mbox> ?mbox');
 		
 	return ret;
 }

@@ -66,7 +66,6 @@ SIF.Connectors.stanbol.analyze = function (obj, success, error) {
 }
 
 SIF.Connectors.stanbol.persons = function (rdf) {
-	//TODO: support merging of two query sets!
 
 	var ret = rdf
 	.where('?subject <http://purl.org/dc/terms/type> <http://dbpedia.org/ontology/Person>')
