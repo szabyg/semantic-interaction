@@ -83,7 +83,17 @@
 			$( elem ).trigger( event );
 		});
 		$('#summary').find('li').autocomplete({
-			source: [ "testing" ]
+			source: function(request, response) {
+				var persons = $('[smart="true"]').sif().persons();
+				var names = [];
+				for (connector in persons) {
+					for (var x = 0; x < persons[connector].length; x++) {
+						var person = persons[connector][x];
+						names.push(person.name.toString().replace(/"/g, ""));
+					}
+				}
+				response(names);
+			}
 		});
 		 //semantify the abstract object
 		 $('[smart="true"]').sif().analyze(); //triggers abs.'contextChanged'
