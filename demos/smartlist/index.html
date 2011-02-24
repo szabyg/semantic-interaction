@@ -72,9 +72,10 @@
   <!-- Let's use it! -->
    <script type="text/javascript">
       $(function() {
-		$('#summary').aloha();
 		$('#summary').keydown(function( event ) {
-			if ( event.simulated ) { return; }
+			if ( event.simulated ) {
+				event.stopImmediatePropagation();
+			}
 			var elem = GENTICS.Aloha.Selection.rangeObject.commonAncestorContainer;
 			event = $.Event( event );
 			if ( event.originalEvent ) {
@@ -86,17 +87,19 @@
 			event.simulated = true;
 			$( elem ).trigger( event );
 		});
+		$('#summary').aloha();
 		$('#summary').find('li').autocomplete({
 			source: function(request, response) {
-				var persons = $('[smart="true"]').sif().persons();
-				var names = [];
-				for (connector in persons) {
-					for (var x = 0; x < persons[connector].length; x++) {
-						var person = persons[connector][x];
-						names.push(person.name);
-					}
-				}
-				response(names);
+				var persons = $('[smart="true"]').sif().persons(),
+					names = [];
+				// loop through connectors
+				$.each( persons, function() {
+					// loop through people
+					$.each( this, function() {
+						names.push( this.name.toString().replace( /^"([^"]+)".+/, "$1" ) );
+					});
+				});
+				response( $.ui.autocomplete.filter( names, request.term ) );
 			}
 		});
 		 //semantify the abstract object
