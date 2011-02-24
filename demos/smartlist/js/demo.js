@@ -2,13 +2,12 @@
  * Demo-specific methods.
  */
 
-function presentEntitiesAsTags (rdfs, inputField) {
+function presentEntitiesAsTags (rdfs, field) {
 			var foundEntities = [];
 			for (var i in rdfs) {
 				var rdf = rdfs[i];
 				for (var e = 0; e < rdf.matches.length; e++) {
 					var entity = rdf[e];
-					debugger;
 					var name = entity.name;
 					var confidence = (entity.confidence) ? parseFloat((entity.confidence.toString()).replace(/"/g, "")) : 100.0;
 					foundEntities.push({
@@ -18,14 +17,8 @@ function presentEntitiesAsTags (rdfs, inputField) {
 					});
 				}
 			}
-		  	inputField
-			.autoSuggest({value: "", name: ""}, {
-						selectedItemProp: "name", 
-                        searchObjProps: "name",
-						startText: "",
-						showResultList: false,
-						preFill: foundEntities,
-                        selectionRemoved: function(elem) { 
-                            elem.fadeTo("fast", 0, function(){ elem.remove(); });
-                        }});
+			for (var x = 0; x < foundEntities.length; x++) {
+				var name = foundEntities[x].name;
+				field.append($("<div>").text(name.replace(/@en/, "")));
+			}
 		}
