@@ -42,13 +42,22 @@ SIF.Connectors.rdfa.analyze = function (obj, success, error) {
 }
 
 SIF.Connectors.rdfa.persons = function (rdf) {
+//	var ret = rdf
+//	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
+//	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
+//	.optional('?subject <http://rdf.data-vocabulary.org/#firstname> ?firstname')
+//	.optional('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
+//	.optional('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
+//	.optional('?subject <http://rdf.data-vocabulary.org/#mbox> ?mbox');
+	
 	var ret = rdf
-	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
-	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
-	.optional('?subject <http://rdf.data-vocabulary.org/#firstname> ?firstname')
-	.optional('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
-	.optional('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
-	.optional('?subject <http://rdf.data-vocabulary.org/#mbox> ?mbox');
+	.where('?affiliation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
+	.where('?affiliation <http://rdf.data-vocabulary.org/#name> ?affname')
+	.where('?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
+	.where('?p <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
+	.where('?p <http://rdf.data-vocabulary.org/#firstname> ?name')
+	.where('?p <http://rdf.data-vocabulary.org/#lastname> ?lastname')
+	.where('?p <http://rdf.data-vocabulary.org/#mbox> ?email');
 		
 	return ret;
 }

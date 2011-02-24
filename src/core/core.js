@@ -58,19 +58,27 @@ SIF.prototype.smartobjects = [];
  */
 SIF.prototype.init = function () {
 
-	//initialize the connectors
-	this.ConnectorManager.init();
-	
-	//initialize the contexts
-	this.ContextManager.init();
-
 	// initialize the Log
 	this.Log.init();
 	
-	//set up special objects
-	this.user = initUser ();
-	this.document = initDocument();
+	SIF.Log.log("info", "core.js", "initializing the SIF core!");
 	
+	//initialize the connectors
+	SIF.Log.log("debug", "core.js", "initializing the connector manager");
+	this.ConnectorManager.init();
+	
+	//initialize the contexts
+	SIF.Log.log("debug", "core.js", "initializing the context manager");
+	this.ContextManager.init();
+
+	
+	//set up 'special' objects
+	SIF.Log.log("debug", "core.js", "initializing the 'special' SIF.Smartobject: SIF.user");
+	this.user = initUser ();
+	SIF.Log.log("debug", "core.js", "initializing the 'special' SIF.Smartobject: SIF.document");
+	this.document = initDocument();
+
+	SIF.Log.log("info", "core.js", "finished initializing the SIF core!");
 	SIF.EventRegistry.trigger(new SIF.Event("ready", SIF, null));
 }
 
@@ -87,12 +95,7 @@ SIF.prototype.init = function () {
 SIF.prototype.registerSmartObject = function (obj) {
 	//converting the plain jQuery object into a SIF.Smartobject
 	if (SIF.getSmartObject(obj) == undefined) {
-		var sObj = new SIF.Smartobject(obj);
-		this.smartobjects.push(sObj);
-		SIF.EventRegistry.trigger(new SIF.Event("registered", obj, null));
-		SIF.EventRegistry.trigger(new SIF.Event("registered", sObj, null));
-		SIF.EventRegistry.trigger(new SIF.Event("objectRegistered", SIF, sObj));
-		return sObj;
+		
 	} else {
 		return SIF.getSmartObject(obj);
 	}
@@ -101,7 +104,7 @@ SIF.prototype.registerSmartObject = function (obj) {
 /**
  * Retrieves the {@link SIF.Smartobject} that corresponds to the given jQuery object.
  * @param {jQuery} obj The object to be retrieved
- * @return {SIF.Smartobject} or <b>undefined</b>
+ * @return {SIF.Smartobject}
  */
 SIF.prototype.getSmartObject = function (obj) {
 	obj = jQuery(obj);
@@ -112,8 +115,13 @@ SIF.prototype.getSmartObject = function (obj) {
 			return sObj;
 		}
 	}
-	//return undefined if not found!
-	return undefined;
+	//register a new element!
+	var sObj = new SIF.Smartobject(obj);
+	this.smartobjects.push(sObj);
+	SIF.EventRegistry.trigger(new SIF.Event("registered", obj, null));
+	SIF.EventRegistry.trigger(new SIF.Event("registered", sObj, null));
+	SIF.EventRegistry.trigger(new SIF.Event("objectRegistered", SIF, sObj));
+	return sObj;
 }
 
 /**

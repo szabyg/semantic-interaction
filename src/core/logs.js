@@ -91,7 +91,7 @@ SIF.Log.prototype.log = function(level, component, message) {
 	level = level.toLowerCase();
 
 	// now check whether the log level is activated
-	if (!SIF.options.logLevels[level]) {
+	if (!$.inArray(SIF.options.logLevels, level)) {
 		return;
 	}
 

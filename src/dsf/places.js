@@ -27,22 +27,28 @@
  */
 
 /**
- * Retrieve all places from a {@link SIF.Smartobject}
- * @return {jQuery.rdf}
+ * Retrieve all places from a {@link SIF.Smartobject}.
+ * A place has a name.
+ * @example
+ * var place = 
+ * {
+ *   name : "Vienna"
+ * }
+ * @return {Object}
  */
 SIF.Smartobject.prototype.places = function () {
-	var ret = {};
+	var copy = this.copy();
 	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
 		var connector = SIF.ConnectorManager.connectors[i];
 		var connectorId = connector.id;
 		if (connector.places) {
-			var rdf = this.getContext().rdf[connectorId];
+			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				ret[connectorId] = connector.places(rdf);
+				copy.matches[connectorId] = connector.places(rdf);
 			} else {
-				ret[connectorId] = jQuery.rdf();
+				copy.matches[connectorId] = jQuery.rdf();
 			}
 		}
 	}
-	return ret;
+	return copy;
 }

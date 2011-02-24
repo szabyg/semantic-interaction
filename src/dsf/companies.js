@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileOverview Semantic Interaction Framework - Companies
+ * @fileOverview Semantic Interaction Framework - DSF - Companies
  * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
  * @copyright (c) 2011 IKS Project
  * @copyright (c) 2011 GENTICS Software GmbH, Vienna
@@ -27,32 +27,32 @@
  */
 
 /**
- * Retrieve all companies from a {@link SIF.Smartobject}.
- * A company has a firstname, lastname, email and
- * affiliation.
+ * Retrieves and !filters! all companies from a {@link SIF.Smartobject}.
+ * A company has a name, latitude, longitude, url.
  * @example
- * var companie = 
+ * var company = 
  * {
- *   firstname : "Sebastian",
- *   lastname  : "Germesin",
- *   email     : "sebastian.germesin@dfki.de",
- *   affiliation : jQuery.uri("<...>");
+ *   name      : "DFKI GmbH",
+ *   latitude  : "49.23485",
+ *   longitude : "6.994402",
+ *   url       : "http://www.dfki.de"
  * }
  * @return {Object}
  */
+
 SIF.Smartobject.prototype.companies = function () {
-	var ret = {};
+	var copy = this.copy();
 	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
 		var connector = SIF.ConnectorManager.connectors[i];
 		var connectorId = connector.id;
 		if (connector.companies) {
-			var rdf = this.getContext().rdf[connectorId];
+			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				ret[connectorId] = connector.companies(rdf);
+				copy.matches[connectorId] = connector.companies(rdf);
 			} else {
-				ret[connectorId] = jQuery.rdf();
+				copy.matches[connectorId] = jQuery.rdf();
 			}
 		}
 	}
-	return ret;
+	return copy;
 }

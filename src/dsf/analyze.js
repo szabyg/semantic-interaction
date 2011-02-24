@@ -17,12 +17,23 @@
  */
 
 /**
+ * @fileOverview Semantic Interaction Framework - DSF - Analysis
+ * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
+ * @copyright (c) 2011 IKS Project
+ * @copyright (c) 2011 GENTICS Software GmbH, Vienna
+ * @copyright (c) 2011 evo42 communications Ltd.
+ * @license Apache License, Version 2.0 (LICENSE.txt)
+ * @version 1.0
+ */
+
+/**
  * Iterates through all {@link SIF.ConnectorManager.connectors} and 
  * calls {@link SIF.Connector#analyze}. The result is passed
  * to the context of the corresponding {@link SIF.Smartobject} this.
  * {@link SIF.Smartobject#getContext()#update}. 
  * @optional {Array} filter An optional argument. If set, only
  * connectors that matches the contained names are applied.
+ * @return {SIF.Smartobject} The object itself
  */
 SIF.Smartobject.prototype.analyze = function (filter) {
 	var that = this;
@@ -31,18 +42,18 @@ SIF.Smartobject.prototype.analyze = function (filter) {
 	};
 	
 	var error = function (message) {
-		//TODO: proper error handling
-		//alert(message);
+		SIF.Log.log("warn", "SIF.Smartobject.analyze", message);
 	}
 	
-	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
-		var connector = SIF.ConnectorManager.connectors[i];
+	$.each (SIF.ConnectorManager.connectors, function () {
 		if (filter) {
-			if ($.inArray(connector.connectorName, filter) != -1) {
-				connector.analyze(this.object, success, error);
+			if ($.inArray(this.id, filter) != -1) {
+				this.analyze(that.object, success, error);
 			}
 		} else {
-			connector.analyze(this.object, success, error);	
+			this.analyze(that.object, success, error);	
 		}
-	} 
+	});
+	
+	return this;
 }

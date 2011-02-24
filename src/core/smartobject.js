@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+
 SIF.Smartobject = function (obj) {
 
 	if (obj == undefined) {
@@ -34,8 +35,16 @@ SIF.Smartobject = function (obj) {
 	SIF.EventRegistry.trigger(new SIF.Event("ready", this, null));
 }
 
-SIF.Smartobject.prototype.getId = function () {
-	return this.id;
+SIF.Smartobject.prototype.matches = {};
+
+SIF.Smartobject.prototype.copy = function () {
+	var copy = new SIF.Smartobject();
+	copy.id = this.id;
+	copy.object = this.object;
+	copy.context = this.context;
+	copy.matches = this.matches;
+	
+	return copy;
 }
 
 SIF.Smartobject.prototype.getContext = function () {

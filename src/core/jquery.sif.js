@@ -17,6 +17,16 @@
  */
 
 /**
+ * @fileOverview Semantic Interaction Framework - jQuery plugin
+ * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
+ * @copyright (c) 2011 IKS Project
+ * @copyright (c) 2011 GENTICS Software GmbH, Vienna
+ * @copyright (c) 2011 evo42 communications Ltd.
+ * @license Apache License, Version 2.0 (LICENSE.txt)
+ * @version 1.0
+ */
+
+/**
  * Convert jQuery object into a SIF.Smartobject.
  *  @return {SIF.Smartobject}
  */

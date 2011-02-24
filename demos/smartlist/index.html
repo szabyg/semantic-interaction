@@ -66,6 +66,7 @@
    
    <!-- SIF - Configurations -->
    <script type="text/javascript">
+	SIF.options.logLevels = ['error', 'warn', 'debug', 'info'];
 	SIF.Connectors.stanbol.options.stanbol_url = "http://stanbol.iksfordrupal.net:9000/engines/";
    </script>
   
@@ -126,7 +127,7 @@
 		  <h3>Teaser</h3>
 		  <p>The IKS Semantic interaction framework hackathon took place in Vienna, Austria. 
 		  Persons from different locations and companies came to work on the framework, e.g.,
-		  GENTICS, <span typeof="v:Organization" about="#dfki">DFKI</span>, jQuery UI.</p>
+		  GENTICS, DFKI, jQuery UI.</p>
 	      <ul>
 	        <li></li>
 	      </ul>
@@ -207,11 +208,11 @@
 			<tr>
 				<td style="width:300px;vertical-align:top;"><div id="companies">
 				  <h3>Tags - Companies</h3>
-				  <button onclick="presentEntitiesAsTags($('[smart]').sif().companies(), $('#companies'));$(this).attr('disabled', 'disabled');">Retrieve all companies</button>
+				  <button onclick="presentEntitiesAsTags($('[smart]').sif('companies'), $('#companies'));$(this).attr('disabled', 'disabled');">Retrieve all companies</button>
 				</div></td>
 				<td style="width:300px;vertical-align:top;"><div id="persons">
 				  <h3>Tags - Persons</h3>
-				  <button onclick="presentEntitiesAsTags($('#test').sif().persons(), $('#persons'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
+				  <button onclick="presentEntitiesAsTags($('[smart]').sif('persons'), $('#persons'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
 				  <div class="info"></div>
 				</div></td>
 			</tr>

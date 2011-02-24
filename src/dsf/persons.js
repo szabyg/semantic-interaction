@@ -36,23 +36,23 @@
  *   firstname : "Sebastian",
  *   lastname  : "Germesin",
  *   email     : "sebastian.germesin@dfki.de",
- *   affiliation : jQuery.uri("<...>");
+ *   affiliation : jQuery.uri("<...>")
  * }
  * @return {Object}
  */
 SIF.Smartobject.prototype.persons = function () {
-	var ret = {};
+	var copy = this.copy();
 	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
 		var connector = SIF.ConnectorManager.connectors[i];
 		var connectorId = connector.id;
 		if (connector.persons) {
-			var rdf = this.getContext().rdf[connectorId];
+			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				ret[connectorId] = connector.persons(rdf);
+				copy.matches[connectorId] = connector.persons(rdf);
 			} else {
-				ret[connectorId] = jQuery.rdf();
+				copy.matches[connectorId] = jQuery.rdf();
 			}
 		}
 	}
-	return ret;
+	return copy;
 }
