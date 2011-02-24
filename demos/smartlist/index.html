@@ -10,18 +10,19 @@
 	xmlns:dc="http://purl.org/dc/terms/"
 	lang="en"> 
   <head>
-    <title>[SiF] - SmartList Demo</title>
-
+    <title>[SiF] - Query smart! Demo</title>
+	
 	<!-- jQuery -->
 	<script type="text/javascript" src="../../lib/jquery/1.4/jquery-1.4.4.min.js"></script>
 	
-    <!-- aloha editor -->
+	<!-- aloha editor -->
     <script>GENTICS_Aloha_base="../../lib/aloha/";</script> 
     <script type="text/javascript" src="../../lib/aloha/aloha.js"></script>
     <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Format/plugin.js"></script>
     <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Table/plugin.js"></script>
     <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.List/plugin.js"></script>
     <script type="text/javascript" src="../../lib/aloha/plugins/com.gentics.aloha.plugins.Link/plugin.js"></script>
+    <script type="text/javascript" src="../../lib/jquery/jquery.cookie.js"></script>
 	
 	<!-- rdfQuery -->
 	<script type="text/javascript" src="../../lib/rdfquery/latest/jquery.rdfquery.core.min.js"></script>
@@ -49,18 +50,11 @@
     <script type="text/javascript" src="../../src/connectors/stanbol.js"></script>
     <script type="text/javascript" src="../../src/connectors/browser.js"></script>
     <script type="text/javascript" src="../../src/connectors/rdfa.js"></script>
-    <script type="text/javascript" src="../../src/connectors/dbpedia.js"></script>
-    <script type="text/javascript" src="../../src/connectors/zemanta.js"></script>
-   
-	<!-- SIF - contexts -->
-    <script type="text/javascript" src="../../src/contexts/user.js"></script>
-    <script type="text/javascript" src="../../src/contexts/document.js"></script> 
 	
 	<!-- SIF - Domain specific Functionality -->
     <script type="text/javascript" src="../../src/dsf/analyze.js"></script>
     <script type="text/javascript" src="../../src/dsf/places.js"></script>
     <script type="text/javascript" src="../../src/dsf/persons.js"></script>
-   
    
    <!-- SIF - Configurations -->
    <script type="text/javascript">
@@ -70,8 +64,9 @@
   <!-- Let's use it! -->
    <script type="text/javascript">
       $(function() {
+		$('#summary').aloha();
 		 //semantify the abstract object
-		 var summary = $('#summary').sif().analyze(); //triggers abs.'contextChanged'
+		 $('#summary').sif().analyze(); //triggers abs.'contextChanged'
       });
     </script>
 	
@@ -84,28 +79,82 @@
   <body>
     <div class="wrapper">
       <center>
-	<h1>[SiF] - Semantic Interaction Framework</h1>
+	<h2>[SiF] - Semantic Interaction Framework</h2>
 	<div class="introduction">
 	  This is a page to demonstrate the usage of the Semantic Interaction Framework.
 	</div>
       </center>
-      <div id="editable">
-		<div id="summary">
-		  <h3>Abstract</h3>
-		  <p>The meeting took place in Vienna, Austria. Members from many countries and companies
-		  participated and joined the 'Hackathon'.</p>
+      <div>
+		<div smart="true" id="summary">
+		  <h3>Example text</h3>
+		  <p>The event took place in Paris, France. 
+		  Victoria Beckham, <span id="barack" typeof="v:Person" about="#barack-obama">
+		  <span property="v:name">Barack Obama</span></span> and 
+		  Michael Jackson were present at the event.</p>
+		  <p>The next event will take place in 
+		  <span typeof="v:Address">
+		      <span property="v:street-address" >123 Main St</span>, 
+			  <span property="v:locality">Albuquerque</span>, 
+			  <span property="v:region">NM</span>.
+	      </span></p>
 		</div>
-		<div id="participants" contenteditable="true">
-		  <h3>List of participants</h3>
-		  <ul>
-		    <li>Firstname Lastname - <a href="mailto:that.persons@email.com">that.persons@email.com</a></li>
-		    <li>...</li>
-		  </ul>
-		</div>
-		<div id="minutes">
-		  <h3>Minutes</h3>
-		  <i>Insert minutes here!</i>
-		</div>
+		<hr/>
+		<hr/>
+		<table>
+			<tr>
+				<td style="width:300px;vertical-align:top;"><div id="places">
+				  <h3>Tags - Places</h3>
+				  <button onclick="presentEntitiesAsTags($('#summary').sif().places(), $('#places input'));$(this).attr('disabled', 'disabled');">Retrieve all places</button>
+				  <input style="display:block;" type="text"></input>
+				</div></td>
+				<td style="width:300px;vertical-align:top;"><div id="persons">
+				  <h3>Tags - Persons</h3>
+				  <button onclick="presentEntitiesAsTags($('#summary').sif().persons(), $('#persons input'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
+				  <div class="info"></div>
+				  <input style="display:block;" type="text"></input>
+				</div></td>
+			</tr>
+		</table>
+      </div>
+      <div>
+      	<h4 style="display:inline">Code explanation:</h4><input onclick="$(this).attr('checked')? $('#code').show():$('#code').hide();" style="display:inline;margin-left:15px;" type="checkbox"><i style="font-size:80%;">toggle</i></input>
+		<span id="code" style="display:none;">
+		<p>Load the Semantic Interaction Framework:
+			<pre>&lt;script type="text/javascript" src=".../jquery.sif-0.1.min.js"&gt;&lt;/script&gt;</pre>
+		</p>
+		<p>Customize the Semantic Interaction Framework:
+			<pre>
+&lt;!-- SIF - connectors --&gt;
+&lt;script type="text/javascript" src=".../connectors/stanbol.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src=".../connectors/browser.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src=".../connectors/rdfa.js"&gt;&lt;/script&gt;
+
+&lt;!-- SIF - Domain specific Functionality --&gt;
+&lt;script type="text/javascript" src=".../src/dsf/analyze.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src=".../src/dsf/places.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src=".../src/dsf/persons.js"&gt;&lt;/script&gt;
+
+&lt;!-- SIF - Configurations --&gt;
+&lt;script type="text/javascript"&gt;
+    SIF.Connectors.stanbol.options.stanbol_url = 
+	             "http://stanbol.iksfordrupal.net:9000/engines/";
+&lt;/script&gt;
+		   </pre>
+		</p>
+		<p>Semantify the object:
+			<pre>
+$(function() {
+  //semantify the abstract object
+  $('#summary').sif().analyze(); //triggers 'contextChanged' on $('#summary')
+});</pre>
+		</p>
+		<p>Query for found persons:
+			<pre>$('#summary').sif().persons();</pre>
+		</p>
+		<p>Query for found places:
+			<pre>$('#summary').sif().places();</pre>
+		</p>
+		</span>
       </div>
     </div>
   </body>
