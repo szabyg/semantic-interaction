@@ -31,21 +31,20 @@ if ( !SIF.Dsfs ) SIF.Dsfs = {};
 /**
  * register the dsf with a unique name
  */
-SIF.Dsfs.persons = new SIF.Dsf('sif.dsf.persons');
+SIF.Dsfs.employees = new SIF.Dsf('sif.dsf.employees');
 
-SIF.Dsfs.persons.options = {};
+SIF.Dsfs.employees.options = {};
 
-SIF.Dsfs.persons.connectorMappers = {};
+SIF.Dsfs.employees.connectorMappers = {};
 
-SIF.Dsfs.persons.init = function () {
+SIF.Dsfs.employees.init = function () {
 };
 
 /**
- * Retrieve all persons from a {@link SIF.Smartobject}.
- * A person has a firstname, lastname, email and
- * affiliation.
+ * Retrieves and !filters! all employees from a {@link SIF.Smartobject}.
+ * A company has a name, latitude, longitude, url.
  * @example
- * var person = 
+ * var employee = 
  * {
  *   firstname : "Sebastian",
  *   lastname  : "Germesin",
@@ -54,10 +53,10 @@ SIF.Dsfs.persons.init = function () {
  * }
  * @return {Object}
  */
-SIF.Smartobject.prototype.persons = function () {
+SIF.Smartobject.prototype.employees = function () {
 	var copy = this.copy();
 	for (var connectorId in SIF.ConnectorManager.connectors) {
-		var mapper = SIF.Dsfs.persons.connectorMappers[connectorId];
+		var mapper = SIF.Dsfs.employees.connectorMappers[connectorId];
 
 		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
@@ -71,24 +70,18 @@ SIF.Smartobject.prototype.persons = function () {
 	return copy;
 }
 
-SIF.Dsfs.persons.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
+SIF.Dsfs.employees.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
+	//TODO: only work on the matches!
 	var ret = rdf
 	.where('?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
-	.where('?p <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
+	.where('?a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
+	.where('?a <http://rdf.data-vocabulary.org/#name> ?aname')
+	.filter("aname", "GENTICS")
+	.where('?p <http://rdf.data-vocabulary.org/#affiliation> ?a')
 	.where('?p <http://rdf.data-vocabulary.org/#firstname> ?name')
 	.where('?p <http://rdf.data-vocabulary.org/#lastname> ?lastname')
 	.where('?p <http://rdf.data-vocabulary.org/#mbox> ?email');
 		
-	return ret;
-	
-}
-
-SIF.Dsfs.persons.connectorMappers['sif.connector.Stanbol'] = function (rdf) {
-	var ret = rdf
-	.where('?subject <http://purl.org/dc/terms/type> <http://dbpedia.org/ontology/Person>')
-	.where('?subject <http://fise.iks-project.eu/ontology/selected-text> ?name')
-	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence');
-	
 	return ret;
 	
 }

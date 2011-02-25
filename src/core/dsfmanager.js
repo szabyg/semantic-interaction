@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileOverview Semantic Interaction Framework - jQuery plugin
+ * @fileOverview Semantic Interaction Framework - Domain-specific functionality Manager
  * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
  * @copyright (c) 2011 IKS Project
  * @copyright (c) 2011 GENTICS Software GmbH, Vienna
@@ -26,32 +26,27 @@
  * @version 1.0
  */
 
-/**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- *  @return {SIF.Smartobject}
- */
-jQuery.fn.sif = function(method) {
-	//TODO: handle multiple selections properly
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
-	}
-	return smartObject;
-};
+SIF.DsfManager = function() {};
+
+
+SIF.DsfManager.prototype.dsfs = [];
 
 /**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- * Fallback in case of namespace collision
- * @return {SIF.Smartobject}
+ * Initialize the {@link SIF.DsfManager}.
+ * @return void.
  */
-jQuery.fn.SIF_sif = function() {
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
+SIF.DsfManager.prototype.init = function() {};
+
+SIF.DsfManager.prototype.register = function(dsf) {
+	if (dsf instanceof SIF.Dsf) {
+		this.dsfs.push(dsf);
+	} else {
+		alert("Trying to register a dsf which is not an instance of SIF.Dsf.");
 	}
-	return smartObject;
+};
+
+SIF.DsfManager = new SIF.DsfManager();
+
+SIF.DsfManager.toString = function() {
+	return "SIF.DsfManager";
 };

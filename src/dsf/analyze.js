@@ -26,6 +26,18 @@
  * @version 1.0
  */
 
+if ( !SIF.Dsfs ) SIF.Dsfs = {};
+
+/**
+ * register the dsf with a unique name
+ */
+SIF.Dsfs.analyze = new SIF.Dsf('sif.dsf.analyze');
+
+SIF.Dsfs.analyze.options = {};
+
+SIF.Dsfs.analyze.init = function () {};
+
+
 /**
  * Iterates through all {@link SIF.ConnectorManager.connectors} and 
  * calls {@link SIF.Connector#analyze}. The result is passed

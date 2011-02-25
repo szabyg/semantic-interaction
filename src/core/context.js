@@ -28,7 +28,6 @@
 
 if (!SIF.Contexts) SIF.Contexts = {};
 
-
 SIF.Context = function(contextId, parentObject) {
 	
 	this.id = contextId;

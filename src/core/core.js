@@ -82,6 +82,10 @@ SIF.prototype.init = function () {
 	SIF.log("debug", "core.js", "initializing the context manager");
 	this.ContextManager.init();
 
+	//initialize the dsfs
+	SIF.log("debug", "core.js", "initializing the dsf manager");
+	this.DsfManager.init();
+
 	SIF.log("info", "core.js", "finished initializing the SIF core!");
 	SIF.EventRegistry.trigger(new SIF.Event("ready", SIF, null));
 }

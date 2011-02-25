@@ -43,7 +43,7 @@ SIF.ConnectorManager = function() {};
  * @property
  * @type Array
  */
-SIF.ConnectorManager.prototype.connectors = [];
+SIF.ConnectorManager.prototype.connectors = {};
 
 /**
  * Initialize the {@link SIF.ConnectorManager}.
@@ -60,7 +60,7 @@ SIF.ConnectorManager.prototype.init = function() {};
 SIF.ConnectorManager.prototype.register = function(connector) {
 
 	if (connector instanceof SIF.Connector) {
-		this.connectors.push(connector); 	
+		this.connectors[connector.id] = connector; 	
 	} else {
 		alert("Trying to register a connector which is not an instance of SIF.Connector.");
 	}

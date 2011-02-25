@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileOverview Semantic Interaction Framework - jQuery plugin
+ * @fileOverview Semantic Interaction Framework - Domain-specific functionality
  * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
  * @copyright (c) 2011 IKS Project
  * @copyright (c) 2011 GENTICS Software GmbH, Vienna
@@ -26,32 +26,12 @@
  * @version 1.0
  */
 
-/**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- *  @return {SIF.Smartobject}
- */
-jQuery.fn.sif = function(method) {
-	//TODO: handle multiple selections properly
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
-	}
-	return smartObject;
+if (!SIF.Dsfs) SIF.Dsfs = {};
+
+SIF.Dsf = function(dsfId) {
+	this.id = dsfId;
+	
+	SIF.DsfManager.register(this);
 };
 
-/**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- * Fallback in case of namespace collision
- * @return {SIF.Smartobject}
- */
-jQuery.fn.SIF_sif = function() {
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
-	}
-	return smartObject;
-};
+SIF.Dsf.prototype.init = function() {};

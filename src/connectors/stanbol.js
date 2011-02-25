@@ -64,26 +64,6 @@ SIF.Connectors.stanbol.analyze = function (obj, success, error) {
 		});
 	}
 }
-
-SIF.Connectors.stanbol.persons = function (rdf) {
-
-	var ret = rdf
-	.where('?subject <http://purl.org/dc/terms/type> <http://dbpedia.org/ontology/Person>')
-	.where('?subject <http://fise.iks-project.eu/ontology/selected-text> ?name')
-	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence');
-	
-	return ret;
-}
-
-SIF.Connectors.stanbol.places = function (rdf) {	
-	var ret = rdf
-	.where('?subject <http://fise.iks-project.eu/ontology/entity-reference> ?object')
-	.where('?subject <http://fise.iks-project.eu/ontology/entity-type> <http://dbpedia.org/ontology/Place>')
-	.where('?subject <http://fise.iks-project.eu/ontology/entity-label> ?name')
-	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence');
-		
-	return ret;
-}
 	
 parseStanbolOutput = function (data) {
 		var rdf = jQuery.rdf();

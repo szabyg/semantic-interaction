@@ -26,6 +26,20 @@
  * @version 1.0
  */
 
+if ( !SIF.Dsfs ) SIF.Dsfs = {};
+
+/**
+ * register the dsf with a unique name
+ */
+SIF.Dsfs.companies = new SIF.Dsf('sif.dsf.companies');
+
+SIF.Dsfs.companies.options = {};
+
+SIF.Dsfs.companies.connectorMappers = {};
+
+SIF.Dsfs.companies.init = function () {
+};
+
 /**
  * Retrieves and !filters! all companies from a {@link SIF.Smartobject}.
  * A company has a name, latitude, longitude, url.
@@ -39,20 +53,32 @@
  * }
  * @return {Object}
  */
-
 SIF.Smartobject.prototype.companies = function () {
 	var copy = this.copy();
-	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
-		var connector = SIF.ConnectorManager.connectors[i];
-		var connectorId = connector.id;
-		if (connector.companies) {
+	for (var connectorId in SIF.ConnectorManager.connectors) {
+		var mapper = SIF.Dsfs.companies.connectorMappers[connectorId];
+
+		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				copy.matches[connectorId] = connector.companies(rdf);
+				copy.matches[connectorId] = mapper(rdf);
 			} else {
 				copy.matches[connectorId] = jQuery.rdf();
 			}
 		}
 	}
 	return copy;
+}
+
+SIF.Dsfs.companies.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
+
+	var ret = rdf
+	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
+	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
+	.optional('?subject <http://rdf.data-vocabulary.org/#url> ?url')
+	.optional('?subject <http://rdf.data-vocabulary.org/#latitude> ?latitude')
+	.optional('?subject <http://rdf.data-vocabulary.org/#longitude> ?longitude');
+		
+	return ret;
+	
 }
