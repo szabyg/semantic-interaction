@@ -24,14 +24,17 @@
             <arg value="-d=${DOCS_DIR}"/>
             <arg value="${SRC_DIR}/core/core.js"/>
             <arg value="${SRC_DIR}/core/logs.js"/>
-            <arg value="${SRC_DIR}/core/connector.js"/>
-            <arg value="${SRC_DIR}/core/connectormanager.js"/>
-            <arg value="${SRC_DIR}/core/context.js"/>
-            <arg value="${SRC_DIR}/core/contextmanager.js"/>
             <arg value="${SRC_DIR}/core/events.js"/>
             <arg value="${SRC_DIR}/core/jquery.sif.js"/>
             <arg value="${SRC_DIR}/core/smartobject.js"/>
             <arg value="${SRC_DIR}/core/utils.js"/>
+            <arg value="${SRC_DIR}/core/smartobject.js"/>
+            <arg value="${SRC_DIR}/core/connector.js"/>
+            <arg value="${SRC_DIR}/core/connectormanager.js"/>
+            <arg value="${SRC_DIR}/core/context.js"/>
+            <arg value="${SRC_DIR}/core/contextmanager.js"/>
+            <arg value="${SRC_DIR}/core/dsf.js"/>
+            <arg value="${SRC_DIR}/core/dsfmanager.js"/>
         </java>
     </target>
 	
@@ -65,17 +68,20 @@
     <target name="combine" description="combines .js files into one file">
         <echo message="Building SIF Distribution" />
         <concat destfile="${JS}/jquery.sif-${VERSION}.js">
-            <fileset dir="${SRC_DIR}" includes="core/core.js" />
-            <fileset dir="${SRC_DIR}" includes="core/logs.js" />
-            <fileset dir="${SRC_DIR}" includes="core/events.js" />
-            <fileset dir="${SRC_DIR}" includes="core/jquery.sif.js" />
-            <fileset dir="${SRC_DIR}" includes="core/utils.js" />
-            <fileset dir="${SRC_DIR}" includes="core/smartobject.js" />
-            <fileset dir="${SRC_DIR}" includes="core/connector.js" />
-            <fileset dir="${SRC_DIR}" includes="core/connectormanager.js" />
-            <fileset dir="${SRC_DIR}" includes="core/context.js" />
-            <fileset dir="${SRC_DIR}" includes="core/contextmanager.js" />
-        </concat>
+        	<fileset dir="${SRC_DIR}" includes="core/core.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/logs.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/events.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/jquery.sif.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/smartobject.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/utils.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/smartobject.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/connector.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/connectormanager.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/context.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/contextmanager.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/dsf.js"/>
+            <fileset dir="${SRC_DIR}" includes="core/dsfmanager.js"/>
+       	</concat>
     </target>
 
     <target name="minimise">
