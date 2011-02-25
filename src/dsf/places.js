@@ -52,15 +52,13 @@ SIF.Dsfs.places.init = function () {
  */
 SIF.Smartobject.prototype.places = function () {
 	var copy = this.copy();
+	copy.matches = [];
 	for (var connectorId in SIF.ConnectorManager.connectors) {
 		var mapper = SIF.Dsfs.places.connectorMappers[connectorId];
-
 		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				copy.matches[connectorId] = mapper(rdf);
-			} else {
-				copy.matches[connectorId] = jQuery.rdf();
+				copy.matches = copy.matches.concat(mapper(rdf, this.matches));
 			}
 		}
 	}
@@ -68,19 +66,37 @@ SIF.Smartobject.prototype.places = function () {
 }
 
 SIF.Dsfs.places.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
-	var ret = rdf
+	 var ret = [];
+	rdf
 	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Address>')
-	.where('?subject <http://rdf.data-vocabulary.org/#locality> ?name');
-		
+	.where('?subject <http://rdf.data-vocabulary.org/#locality> ?name')
+	.each (function () {
+		var place =  {
+				uri : this.subject,
+				name : this.name.toString()
+		};
+		ret.push(place);
+	});
+    
 	return ret;
 }
 
 SIF.Dsfs.places.connectorMappers['sif.connector.Stanbol'] = function (rdf) {
-	var ret = rdf
+	 var ret = [];
+	
+	 rdf
 	.where('?subject <http://fise.iks-project.eu/ontology/entity-reference> ?object')
 	.where('?subject <http://fise.iks-project.eu/ontology/entity-type> <http://dbpedia.org/ontology/Place>')
 	.where('?subject <http://fise.iks-project.eu/ontology/entity-label> ?name')
-	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence');
+	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence')
+	.each (function () {
+		var place =  {
+				uri : this.subject,
+				name : this.name.toString(),
+				confidence : this.confidence.toString()
+		};
+		ret.push(place);
+	});
 		
 	return ret;
 }
