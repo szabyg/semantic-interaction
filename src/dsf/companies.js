@@ -46,6 +46,7 @@ SIF.Dsfs.companies.init = function () {
  * @example
  * var company = 
  * {
+ *   uri       : jQuery.uri("..."),
  *   name      : "DFKI GmbH",
  *   latitude  : "49.23485",
  *   longitude : "6.994402",
@@ -55,30 +56,42 @@ SIF.Dsfs.companies.init = function () {
  */
 SIF.Smartobject.prototype.companies = function () {
 	var copy = this.copy();
+	copy.matches = [];
 	for (var connectorId in SIF.ConnectorManager.connectors) {
 		var mapper = SIF.Dsfs.companies.connectorMappers[connectorId];
 
 		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				copy.matches[connectorId] = mapper(rdf);
-			} else {
-				copy.matches[connectorId] = jQuery.rdf();
+				copy.matches = copy.matches.concat(mapper(rdf, this.matches));
 			}
 		}
 	}
 	return copy;
 }
 
-SIF.Dsfs.companies.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
+/**
+ * Returns an array of companies.
+ */
+SIF.Dsfs.companies.connectorMappers['sif.connector.Rdfa'] = function (rdf, matches) {
+    var ret = [];
 
-	var ret = rdf
+    rdf
 	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
 	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
 	.optional('?subject <http://rdf.data-vocabulary.org/#url> ?url')
 	.optional('?subject <http://rdf.data-vocabulary.org/#latitude> ?latitude')
-	.optional('?subject <http://rdf.data-vocabulary.org/#longitude> ?longitude');
-		
-	return ret;
-	
+	.optional('?subject <http://rdf.data-vocabulary.org/#longitude> ?longitude')
+	.each (function () {
+		var company =  {
+				uri : this.subject,
+				name : this.name.toString(),
+				url : (this.url)? this.url.toString() : undefined,
+				latitude : (this.latitude)? this.latitude.toString() : undefined,
+				longitude : (this.longitude)? this.longitude.toString() : undefined
+		};
+		ret.push(company);
+	});
+    
+	return ret;	
 }

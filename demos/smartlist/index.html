@@ -52,7 +52,9 @@
     <script type="text/javascript" src="../../src/core/connectormanager.js"></script>
     <script type="text/javascript" src="../../src/core/context.js"></script>
     <script type="text/javascript" src="../../src/core/contextmanager.js"></script>
-	<!--<script type="text/javascript" src="../../dist/min/jquery.sif-0.1.min.js"></script>-->
+    <script type="text/javascript" src="../../src/core/dsf.js"></script>
+    <script type="text/javascript" src="../../src/core/dsfmanager.js"></script>
+    <!--<script type="text/javascript" src="../../dist/min/jquery.sif-0.1.min.js"></script>-->
 	
 	<!-- SIF - connectors -->
     <script type="text/javascript" src="../../src/connectors/stanbol.js"></script>
@@ -63,6 +65,7 @@
     <script type="text/javascript" src="../../src/dsf/analyze.js"></script>
     <script type="text/javascript" src="../../src/dsf/companies.js"></script>
     <script type="text/javascript" src="../../src/dsf/persons.js"></script>
+    <script type="text/javascript" src="../../src/dsf/employees.js"></script>
    
    <!-- SIF - Configurations -->
    <script type="text/javascript">
@@ -91,10 +94,10 @@
 		$('#summary').aloha();
 		$('#summary').find('li').autocomplete({
 			source: function(request, response) {
-				var persons = $('[smart="true"]').sif().persons(),
+				var persons = $('#summary').sif('companies').sif('employees'),
 					names = [];
 				// loop through connectors
-				$.each( persons, function() {
+				$.each( persons.matches, function() {
 					// loop through people
 					$.each( this, function() {
 						names.push( this.name.toString().replace( /^"([^"]+)".+/, "$1" ) );
@@ -104,7 +107,7 @@
 			}
 		});
 		 //semantify the abstract object
-		 $('[smart="true"]').sif().analyze(); //triggers abs.'contextChanged'
+		 $('#summary').sif('analyze'); //triggers abs.'contextChanged'
       });
     </script>
 	
@@ -176,7 +179,7 @@
 				<span property="v:lastname">Becker</span>
 				<span property="v:mbox">becker@dfki.de</span>
 				<span rel="v:affiliation">
-					<span typeof="v:Organization" about="#gentics"></span>
+					<span typeof="v:Organization" about="#dfki"></span>
 				</span>
 				<span property="v:role" content="Senior Researcher"></span>
 			</span>
@@ -204,16 +207,15 @@
 		</div>
 		<hr/>
 		<hr/>
-		<button onclick="var x = $('[smart]').sif('companies');debugger;var y = x.sif('persons');debugger;">test</button>
 		<table>
 			<tr>
 				<td style="width:300px;vertical-align:top;"><div id="companies">
 				  <h3>Tags - Companies</h3>
-				  <button onclick="presentEntitiesAsTags($('[smart]').sif('companies'), $('#companies'));$(this).attr('disabled', 'disabled');">Retrieve all companies</button>
+				  <button onclick="presentEntitiesAsTags($('#summary').sif('companies'), $('#companies'));$(this).attr('disabled', 'disabled');">Retrieve all companies</button>
 				</div></td>
 				<td style="width:300px;vertical-align:top;"><div id="persons">
 				  <h3>Tags - Persons</h3>
-				  <button onclick="presentEntitiesAsTags($('[smart]').sif('persons'), $('#persons'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
+				  <button onclick="presentEntitiesAsTags($('#summary').sif('persons'), $('#persons'));$(this).attr('disabled', 'disabled');">Retrieve all persons</button>
 				  <div class="info"></div>
 				</div></td>
 			</tr>
@@ -248,14 +250,14 @@
 			<pre>
 $(function() {
   //semantify the abstract object
-  $('#summary').sif().analyze(); //triggers 'contextChanged' on $('#summary')
+  $('#summary').sif('analyze'); //triggers 'contextChanged' on $('#summary')
 });</pre>
 		</p>
 		<p>Query for found persons:
-			<pre>$('#summary').sif().persons();</pre>
+			<pre>$('#summary').sif('persons');</pre>
 		</p>
 		<p>Query for found places:
-			<pre>$('#summary').sif().places();</pre>
+			<pre>$('#summary').sif('places');</pre>
 		</p>
 		</span>
       </div>

@@ -40,22 +40,21 @@ SIF.Smartobject = function (obj) {
  * Needed for chaining.
  */
 SIF.Smartobject.prototype.sif = function(method) {
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
+	var args = Array.prototype.slice.call(arguments, 1);
 	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
+		return this[method].apply(this, args);
 	}
 	return smartObject;
 };
 
-SIF.Smartobject.prototype.matches = {};
+SIF.Smartobject.prototype.matches = undefined;
 
 SIF.Smartobject.prototype.copy = function () {
 	var copy = new SIF.Smartobject();
 	copy.id = this.id;
 	copy.object = this.object;
 	copy.context = this.context;
-	copy.matches = this.matches;
+	copy.matches = {};
 	
 	return copy;
 }

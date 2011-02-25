@@ -55,33 +55,54 @@ SIF.Dsfs.employees.init = function () {
  */
 SIF.Smartobject.prototype.employees = function () {
 	var copy = this.copy();
+	copy.matches = {};
 	for (var connectorId in SIF.ConnectorManager.connectors) {
 		var mapper = SIF.Dsfs.employees.connectorMappers[connectorId];
 
 		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				copy.matches[connectorId] = mapper(rdf);
+				copy.matches[connectorId] = mapper(rdf, this.matches);
 			} else {
-				copy.matches[connectorId] = jQuery.rdf();
+				copy.matches[connectorId] = [];
 			}
 		}
 	}
 	return copy;
 }
 
-SIF.Dsfs.employees.connectorMappers['sif.connector.Rdfa'] = function (rdf) {
-	//TODO: only work on the matches!
-	var ret = rdf
-	.where('?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
-	.where('?a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
-	.where('?a <http://rdf.data-vocabulary.org/#name> ?aname')
-	.filter("aname", "GENTICS")
-	.where('?p <http://rdf.data-vocabulary.org/#affiliation> ?a')
-	.where('?p <http://rdf.data-vocabulary.org/#firstname> ?name')
-	.where('?p <http://rdf.data-vocabulary.org/#lastname> ?lastname')
-	.where('?p <http://rdf.data-vocabulary.org/#mbox> ?email');
-		
+/**
+ * Returns an array of {@link jQuery.uri}s.
+ */
+SIF.Dsfs.employees.connectorMappers['sif.connector.Rdfa'] = function (rdf, matches) {
+	var ret = [];
+	rdf
+    .where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
+	.where('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
+	.where('?subject <http://rdf.data-vocabulary.org/#firstname> ?name')
+	.where('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
+	.where('?subject <http://rdf.data-vocabulary.org/#mbox> ?email')
+	.filter(function () {
+		var affiliation = this.affiliation;
+		var contains = false;
+		$.each (matches, function () {
+			if (this.uri.toString() === affiliation.toString()) {
+				contains = true;
+				return;
+			}
+		});
+		return contains;
+	})
+	.each (function () {
+		var employee =  {
+				uri : this.subject,
+				affiliation : this.affiliation,
+				name : this.name.toString(),
+				lastname : this.lastname.toString(),
+				email: this.email.toString()
+		};
+		ret.push(employee);
+	});
+    
 	return ret;
-	
 }
