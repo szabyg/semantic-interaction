@@ -50,6 +50,18 @@ SIF.prototype.options = {};
 SIF.prototype.smartobjects = [];
 
 /**
+ * Logs a message to the console
+ * @param level Level of the log ("error", "warn" or "info", "debug")
+ * @param component Component that calls the log
+ * @param message log message
+ * @return void
+ * @hide
+ */
+SIF.prototype.log = function(level, component, message) {
+	SIF.Log.log(level, component, message);
+};
+
+/**
  * Initialize the whole {@link SIF}.
  * Initializes the ConnectorManager.
  * Initializes the ContextManager.<br />
@@ -58,46 +70,30 @@ SIF.prototype.smartobjects = [];
  */
 SIF.prototype.init = function () {
 
-	//initialize the connectors
-	this.ConnectorManager.init();
-	
-	//initialize the contexts
-	this.ContextManager.init();
-
 	// initialize the Log
 	this.Log.init();
-	
-	SIF.EventRegistry.trigger(new SIF.Event("ready", SIF, null));
-}
+	SIF.log("info", "core.js", "initializing the SIF core!");
 
-/**
- * Registers a {@link jQuery} object in {@link SIF}. If the obj is already
- * registered, no events are called and the already
- * registered event is returned.<br />
- * Triggers 'registered' on the given object.<br />
- * Triggers 'registered' on the {@link SIF.Smartobject}.<br />
- * Triggers 'objectRegistered' on SIF.
- * @param {jQuery} obj The object to be registered
- * @return {SIF.Smartobject}
- */
-SIF.prototype.registerSmartObject = function (obj) {
-	//converting the plain jQuery object into a SIF.Smartobject
-	if (SIF.getSmartObject(obj) == undefined) {
-		var sObj = new SIF.Smartobject(obj);
-		this.smartobjects.push(sObj);
-		SIF.EventRegistry.trigger(new SIF.Event("registered", obj, null));
-		SIF.EventRegistry.trigger(new SIF.Event("registered", sObj, null));
-		SIF.EventRegistry.trigger(new SIF.Event("objectRegistered", SIF, sObj));
-		return sObj;
-	} else {
-		return SIF.getSmartObject(obj);
-	}
+	//initialize the connectors
+	SIF.log("debug", "core.js", "initializing the connector manager");
+	this.ConnectorManager.init();
+
+	//initialize the contexts
+	SIF.log("debug", "core.js", "initializing the context manager");
+	this.ContextManager.init();
+
+	//initialize the dsfs
+	SIF.log("debug", "core.js", "initializing the dsf manager");
+	this.DsfManager.init();
+
+	SIF.log("info", "core.js", "finished initializing the SIF core!");
+	SIF.EventRegistry.trigger(new SIF.Event("ready", SIF, null));
 }
 
 /**
  * Retrieves the {@link SIF.Smartobject} that corresponds to the given jQuery object.
  * @param {jQuery} obj The object to be retrieved
- * @return {SIF.Smartobject} or <b>undefined</b>
+ * @return {SIF.Smartobject}
  */
 SIF.prototype.getSmartObject = function (obj) {
 	obj = jQuery(obj);
@@ -108,40 +104,15 @@ SIF.prototype.getSmartObject = function (obj) {
 			return sObj;
 		}
 	}
-	//return undefined if not found!
-	return undefined;
-}
-
-/**
- * Unregisters the object. The object can either be of the
- * type {@link SIF.Smartobject} or jQuery.<br />
- * Triggers 'unregistered' on the given object.<br />
- * Triggers 'unregistered' on the {@link SIF.Smartobject}.<br />
- * Triggers 'objectUnregistered' on SIF.
- * @param {SIF.Smartobject | jQuery} obj The object to be unregistered.
- * @return void.
- */
-SIF.prototype.unregisterSmartObject = function (obj) {
-	//test if obj instanceof SIF.Smartobject
-	var sObj;
-	if (!(obj instanceof SIF.Smartobject)) {
-		//if not, retrieve the corresponding object first
-		sObj = this.getSmartObject (obj);
-	}
-	else {
-		sObj = obj;
-	}
+	//register a new element!
+	var sObj = new SIF.Smartobject(obj);
 	
-	// Find the index of the object
-	var id = this.smartobjects.indexOf( obj ); 
+	this.smartobjects.push(sObj);
+	SIF.EventRegistry.trigger(new SIF.Event("registered", obj, null));
+	SIF.EventRegistry.trigger(new SIF.Event("registered", sObj, null));
+	SIF.EventRegistry.trigger(new SIF.Event("objectRegistered", SIF, sObj));
 	
-	// Chec if actually found!
-	if (id != -1) {
-		this.smartobjects.splice(id, 1); 
-	}
-	SIF.EventRegistry.trigger(new SIF.Event("unregistered", obj, null));
-	SIF.EventRegistry.trigger(new SIF.Event("unregistered", sObj, null));
-	SIF.EventRegistry.trigger(new SIF.Event("objectUnregistered", SIF, sObj));
+	return sObj;
 }
 
 SIF = new SIF();

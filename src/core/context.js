@@ -28,10 +28,9 @@
 
 if (!SIF.Contexts) SIF.Contexts = {};
 
-
 SIF.Context = function(contextId, parentObject) {
 	
-	this.contextId = contextId;
+	this.id = contextId;
 	
 	this.parentObject = parentObject;
 
@@ -43,23 +42,28 @@ SIF.Context = function(contextId, parentObject) {
 
 SIF.Context.prototype.rdf = {};
 
-SIF.Context.prototype.init = function() {};
+SIF.Context.prototype.init = function() {
+	this.rdf["noconnector"] = jQuery.rdf();
+};
 
 /**
  * Add all triples in the {jQuery.rdf} object to the current context.
+ * @param {SIF.Connector} connector The connector that was used to retrieve the data.
  * @trigger Triggers the 'contextChanged' event on the parentObject.
  */
-SIF.Context.prototype.update = function (connectorId, rdf) {
+SIF.Context.prototype.update = function (rdf, connector) {
 	
-	if (!this.rdf[connectorId]) {
-		this.rdf[connectorId] = jQuery.rdf();
+	if (connector === undefined) {
+		SIF.log("error", "SIF.Context.update(rdf, undefined)", "TO BE IMPLEMENTED");
 	}
-	
-	var that = this;
-	var triples = rdf.databank.triples();
-	triples.each(function (i, e) {
-		that.rdf[connectorId].add(e);
-	});
+	else if (!this.rdf[connector.id]) {
+		this.rdf[connector.id] = jQuery.rdf();
+		var that = this;
+		var triples = rdf.databank.triples();
+		triples.each(function (i, e) {
+			that.rdf[connector.id].add(e);
+		});
+	}
 	
 	SIF.EventRegistry.trigger(new SIF.Event("contextChanged", this.parentObject, null));
 }

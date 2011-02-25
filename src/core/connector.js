@@ -35,14 +35,13 @@ if (!SIF.Connectors) SIF.Connectors = {};
  * @namespace SIF.Connector
  * @class SIF.Connector The parent class to inherit connector functionality from.
  * @see SIF.ConnectorManager#register
- * @param {String} connectorId A unique id for the connector.
- * @param {String} connectorName (optional) A name for the connector.
+ * @param {String} connectorId A unique id (or name) for the connector.
  * @constructor
  */
-SIF.Connector = function(connectorId, connectorName) {
+SIF.Connector = function(connectorId) {
 	
-	this.connectorId = connectorId;
-	this.connectorName = (connectorName) ? connectorName : connectorId;
+	this.id = connectorId;
+	//TODO: throw an exception if the id is already registered.
 
 	SIF.ConnectorManager.register(this);
 };

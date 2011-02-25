@@ -31,39 +31,40 @@ if ( !SIF.Dsfs ) SIF.Dsfs = {};
 /**
  * register the dsf with a unique name
  */
-SIF.Dsfs.persons = new SIF.Dsf('sif.dsf.persons');
+SIF.Dsfs.employees = new SIF.Dsf('sif.dsf.employees');
 
-SIF.Dsfs.persons.options = {};
+SIF.Dsfs.employees.options = {};
 
-SIF.Dsfs.persons.connectorMappers = {};
+SIF.Dsfs.employees.connectorMappers = {};
 
-SIF.Dsfs.persons.init = function () {
+SIF.Dsfs.employees.init = function () {
 };
 
 /**
- * Retrieve all persons from a {@link SIF.Smartobject}.
- * A person has a firstname, lastname, email and
- * affiliation.
+ * Retrieves and !filters! all employees from a {@link SIF.Smartobject}.
+ * A company has a name, latitude, longitude, url.
  * @example
- * var person = 
+ * var employee = 
  * {
- *   name : "Sebastian Germesin",
+ *   firstname : "Sebastian",
+ *   lastname  : "Germesin",
  *   email     : "sebastian.germesin@dfki.de",
  *   affiliation : jQuery.uri("<...>")
  * }
  * @return {Object}
  */
-
-SIF.Smartobject.prototype.persons = function () {
+SIF.Smartobject.prototype.employees = function () {
 	var copy = this.copy();
-	copy.matches = [];
+	copy.matches = {};
 	for (var connectorId in SIF.ConnectorManager.connectors) {
-		var mapper = SIF.Dsfs.persons.connectorMappers[connectorId];
+		var mapper = SIF.Dsfs.employees.connectorMappers[connectorId];
 
 		if (mapper) {
 			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				copy.matches = copy.matches.concat(mapper(rdf, this.matches));
+				copy.matches[connectorId] = mapper(rdf, this.matches);
+			} else {
+				copy.matches[connectorId] = [];
 			}
 		}
 	}
@@ -71,46 +72,37 @@ SIF.Smartobject.prototype.persons = function () {
 }
 
 /**
- * Returns an array of companies.
+ * Returns an array of {@link jQuery.uri}s.
  */
-SIF.Dsfs.persons.connectorMappers['sif.connector.Rdfa'] = function (rdf, matches) {
-    var ret = [];
-
-    rdf
+SIF.Dsfs.employees.connectorMappers['sif.connector.Rdfa'] = function (rdf, matches) {
+	var ret = [];
+	rdf
     .where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
 	.where('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
 	.where('?subject <http://rdf.data-vocabulary.org/#firstname> ?name')
+	.where('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
 	.where('?subject <http://rdf.data-vocabulary.org/#mbox> ?email')
+	.filter(function () {
+		var affiliation = this.affiliation;
+		var contains = false;
+		$.each (matches, function () {
+			if (this.uri.toString() === affiliation.toString()) {
+				contains = true;
+				return;
+			}
+		});
+		return contains;
+	})
 	.each (function () {
-		var company =  {
+		var employee =  {
 				uri : this.subject,
-				name : this.name.toString(),
 				affiliation : this.affiliation,
-				email : this.email.toString()
-		};
-		ret.push(company);
-	});
-    
-	return ret;	
-}
-
-SIF.Dsfs.persons.connectorMappers['sif.connector.Stanbol'] = function (rdf, matches) {
-    var ret = [];
-
-    rdf
-    .where('?subject <http://purl.org/dc/terms/type> <http://dbpedia.org/ontology/Person>')
-	.where('?subject <http://fise.iks-project.eu/ontology/selected-text> ?name')
-	.where('?subject <http://fise.iks-project.eu/ontology/confidence> ?confidence')
-    .each (function () {
-		var company =  {
-				uri : this.subject,
 				name : this.name.toString(),
-				affiliation : undefined,
-				email : undefined,
-				confidence: this.confidence.toString()
+				lastname : this.lastname.toString(),
+				email: this.email.toString()
 		};
-		ret.push(company);
+		ret.push(employee);
 	});
     
-	return ret;	
+	return ret;
 }

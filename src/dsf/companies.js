@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileOverview Semantic Interaction Framework - Companies
+ * @fileOverview Semantic Interaction Framework - DSF - Companies
  * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
  * @copyright (c) 2011 IKS Project
  * @copyright (c) 2011 GENTICS Software GmbH, Vienna
@@ -26,33 +26,72 @@
  * @version 1.0
  */
 
+if ( !SIF.Dsfs ) SIF.Dsfs = {};
+
 /**
- * Retrieve all companies from a {@link SIF.Smartobject}.
- * A company has a firstname, lastname, email and
- * affiliation.
+ * register the dsf with a unique name
+ */
+SIF.Dsfs.companies = new SIF.Dsf('sif.dsf.companies');
+
+SIF.Dsfs.companies.options = {};
+
+SIF.Dsfs.companies.connectorMappers = {};
+
+SIF.Dsfs.companies.init = function () {
+};
+
+/**
+ * Retrieves and !filters! all companies from a {@link SIF.Smartobject}.
+ * A company has a name, latitude, longitude, url.
  * @example
- * var companie = 
+ * var company = 
  * {
- *   firstname : "Sebastian",
- *   lastname  : "Germesin",
- *   email     : "sebastian.germesin@dfki.de",
- *   affiliation : jQuery.uri("<...>");
+ *   uri       : jQuery.uri("..."),
+ *   name      : "DFKI GmbH",
+ *   latitude  : "49.23485",
+ *   longitude : "6.994402",
+ *   url       : "http://www.dfki.de"
  * }
  * @return {Object}
  */
 SIF.Smartobject.prototype.companies = function () {
-	var ret = {};
-	for (var i = 0; i < SIF.ConnectorManager.connectors.length; i++) {
-		var connector = SIF.ConnectorManager.connectors[i];
-		var connectorId = connector.connectorId;
-		if (connector.companies) {
-			var rdf = this.getContext().rdf[connectorId];
+	var copy = this.copy();
+	copy.matches = [];
+	for (var connectorId in SIF.ConnectorManager.connectors) {
+		var mapper = SIF.Dsfs.companies.connectorMappers[connectorId];
+
+		if (mapper) {
+			var rdf = copy.getContext().rdf[connectorId];
 			if (rdf) {
-				ret[connectorId] = connector.companies(rdf);
-			} else {
-				ret[connectorId] = jQuery.rdf();
+				copy.matches = copy.matches.concat(mapper(rdf, this.matches));
 			}
 		}
 	}
-	return ret;
+	return copy;
+}
+
+/**
+ * Returns an array of companies.
+ */
+SIF.Dsfs.companies.connectorMappers['sif.connector.Rdfa'] = function (rdf, matches) {
+    var ret = [];
+
+    rdf
+	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
+	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
+	.optional('?subject <http://rdf.data-vocabulary.org/#url> ?url')
+	.optional('?subject <http://rdf.data-vocabulary.org/#latitude> ?latitude')
+	.optional('?subject <http://rdf.data-vocabulary.org/#longitude> ?longitude')
+	.each (function () {
+		var company =  {
+				uri : this.subject,
+				name : this.name.toString(),
+				url : (this.url)? this.url.toString() : undefined,
+				latitude : (this.latitude)? this.latitude.toString() : undefined,
+				longitude : (this.longitude)? this.longitude.toString() : undefined
+		};
+		ret.push(company);
+	});
+    
+	return ret;	
 }

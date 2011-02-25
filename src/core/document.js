@@ -16,15 +16,24 @@
  *  limitations under the License.
  */
 
-if ( !SIF.Contexts ) SIF.Contexts = {};
-
 /**
- * register the context with a unique name
+ * @fileOverview Semantic Interaction Framework - Document
+ * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
+ * @copyright (c) 2011 IKS Project
+ * @copyright (c) 2011 GENTICS Software GmbH, Vienna
+ * @copyright (c) 2011 evo42 communications Ltd.
+ * @license Apache License, Version 2.0 (LICENSE.txt)
+ * @version 1.0
  */
-SIF.Contexts.user = new SIF.Context('sif.context.User');
 
-SIF.Contexts.user.options = {};
+SIF.Document = function () {
+	var document = new SIF.Smartobject();
 
-SIF.Contexts.user.rdf = jQuery.rdf();
 
-SIF.Contexts.user.
+	//TODO!
+	
+	SIF.EventRegistry.trigger(new SIF.Event("ready", user, null));
+	return document;
+}
+
+SIF.Document = new SIF.Document();

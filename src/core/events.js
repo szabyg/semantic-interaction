@@ -16,6 +16,23 @@
  *  limitations under the License.
  */
 
+/**
+ * @fileOverview Semantic Interaction Framework - Events
+ * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
+ * @copyright (c) 2011 IKS Project
+ * @copyright (c) 2011 GENTICS Software GmbH, Vienna
+ * @copyright (c) 2011 evo42 communications Ltd.
+ * @license Apache License, Version 2.0 (LICENSE.txt)
+ * @version 1.0
+ */
+
+/**
+ * Instantiates a {SIF.Event} object.
+ * @param {String} eventName The name of the event.
+ * @param {Object} eventSource The source of the event.
+ * @param {Object} properties The properties that come with this event.
+ * @class
+ */
 SIF.Event = function (eventName, eventSource, properties) {
   this.name = eventName;
   if (eventSource) {
@@ -28,11 +45,25 @@ SIF.Event = function (eventName, eventSource, properties) {
 
 SIF.EventRegistry = function () {};
 
+/**
+ * Subscribe to an event on a certain source.
+ * @param {Object} eventSource The source object of the event.
+ * @param {String} eventName The name of the event.
+ * @param {Function} handleMethod The function that is called when the event is triggered.
+ * @return void.
+ */
 SIF.EventRegistry.prototype.subscribe = function (eventSource, eventName, handleMethod) {
+	SIF.log("debug", "SIF.EventRegistry", eventSource + " subscribed to the event '" + eventName + "'");
 	jQuery(eventSource).bind(eventName, handleMethod);
 };
 
+/**
+ * Triggering an event on a certain source.
+ * @param {SIF.Event} event The event to be triggered.
+ * @return void.
+ */
 SIF.EventRegistry.prototype.trigger = function (event) {
+	SIF.log("debug", "SIF.EventRegistry", "triggering event '" + event.name + "' on object '" + event.source + "'");
 	jQuery(event.source).trigger(event.name, event.properties);
 };
 

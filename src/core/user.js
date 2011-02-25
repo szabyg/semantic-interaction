@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileOverview Semantic Interaction Framework - jQuery plugin
+ * @fileOverview Semantic Interaction Framework - User
  * @author <a href="mailto:sebastian.germesin@dfki.de">Sebastian Germesin</a>
  * @copyright (c) 2011 IKS Project
  * @copyright (c) 2011 GENTICS Software GmbH, Vienna
@@ -26,32 +26,19 @@
  * @version 1.0
  */
 
-/**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- *  @return {SIF.Smartobject}
- */
-jQuery.fn.sif = function(method) {
-	//TODO: handle multiple selections properly
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
-	}
-	return smartObject;
-};
+SIF.User = function () {
+	var user = new SIF.Smartobject();
 
-/**
- * Convert jQuery object into a SIF.Smartobject.
- * @optional {String} method Calls the domain-specific functionality.
- * Fallback in case of namespace collision
- * @return {SIF.Smartobject}
- */
-jQuery.fn.SIF_sif = function() {
-	var args = Array.prototype.slice.call(arguments, 1),
-		smartObject = SIF.getSmartObject(jQuery(this));
-	if ( arguments.length ) {
-		return smartObject[method].apply(smartObject, args);
+	//get current location
+	if (SIF.Connectors.browser) {
+		SIF.Connectors.browser.analyze(navigator, function (data) {
+			var triples = data.databank.triples();
+			user.getContext().update(data, SIF.Connectors.browser)
+		});
 	}
-	return smartObject;
-};
+	
+	SIF.EventRegistry.trigger(new SIF.Event("ready", user, null));
+	return user;
+}
+
+SIF.User = new SIF.User();

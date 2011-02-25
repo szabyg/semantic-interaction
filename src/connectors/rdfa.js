@@ -41,33 +41,3 @@ SIF.Connectors.rdfa.analyze = function (obj, success, error) {
 	}
 }
 
-SIF.Connectors.rdfa.persons = function (rdf) {
-	var ret = rdf
-	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Person>')
-	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
-	.optional('?subject <http://rdf.data-vocabulary.org/#firstname> ?firstname')
-	.optional('?subject <http://rdf.data-vocabulary.org/#lastname> ?lastname')
-	.optional('?subject <http://rdf.data-vocabulary.org/#affiliation> ?affiliation')
-	.optional('?subject <http://rdf.data-vocabulary.org/#mbox> ?mbox');
-		
-	return ret;
-}
-
-SIF.Connectors.rdfa.companies = function (rdf) {	
-	var ret = rdf
-	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Organization>')
-	.where('?subject <http://rdf.data-vocabulary.org/#name> ?name')
-	.optional('?subject <http://rdf.data-vocabulary.org/#url> ?url')
-	.optional('?subject <http://rdf.data-vocabulary.org/#latitude> ?latitude')
-	.optional('?subject <http://rdf.data-vocabulary.org/#longitude> ?longitude');
-		
-	return ret;
-}
-
-SIF.Connectors.rdfa.places = function (rdf) {	
-	var ret = rdf
-	.where('?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.data-vocabulary.org/#Address>')
-	.where('?subject <http://rdf.data-vocabulary.org/#locality> ?name');
-		
-	return ret;
-}

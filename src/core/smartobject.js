@@ -16,23 +16,47 @@
  *  limitations under the License.
  */
 
+
 SIF.Smartobject = function (obj) {
-	
-	if (obj.attr('id') == undefined) {
-		obj.attr('id', SIF.Utils.guid());
+
+	if (obj == undefined) {
+		// special type of object (e.g., user, document, ...)
+		this.id = SIF.Utils.guid();
+	} 
+	else {
+		if (obj.attr('id') == undefined) {
+			obj.attr('id', SIF.Utils.guid());
+		}
+		this.id = obj.attr('id');
+		this.object = obj;
 	}
-	
-	this.id = obj.attr('id');
-	
-	this.object = obj;
-	
 	this.context = new SIF.Context("object." + this.id, this);
 	
+	SIF.log("debug", "SIF.Smartobject", this.id)
 	SIF.EventRegistry.trigger(new SIF.Event("ready", this, null));
 }
 
-SIF.Smartobject.prototype.getId = function () {
-	return this.id;
+/**
+ * Needed for chaining.
+ */
+SIF.Smartobject.prototype.sif = function(method) {
+	var args = Array.prototype.slice.call(arguments, 1);
+	if ( arguments.length ) {
+		return this[method].apply(this, args);
+	}
+	return smartObject;
+};
+
+SIF.Smartobject.prototype.matches = undefined;
+
+SIF.Smartobject.prototype.copy = function () {
+	var copy = new SIF.Smartobject();
+	copy.id = this.id;
+	copy.object = this.object;
+	copy.context = this.context;
+	copy.matches = {};
+	
+	return copy;
 }
 
 SIF.Smartobject.prototype.getContext = function () {
